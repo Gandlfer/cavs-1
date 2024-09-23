@@ -39,10 +39,12 @@ mkdir ~/catkin_ws
 CWS=~/catkin_ws
 mkdir ${CWS}/src
 
-cd $CWS/src
-
 # Git Clone Nature Stack, mavs_ros, rosbridge-suite rosauth
+cd $CWS/src
 git clone https://github.com/CGoodin/mavs_ros # mavs_ros
+
+cd $CWS/src
+git clone https://github.com/GT-RAIL/rosauth.git # rosauth
 
 git clone https://github.com/CGoodin/nature-stack.git nature # nature
 cd $CWS/src/nature
@@ -50,12 +52,9 @@ cp CMakeLists_ros1.cmake CMakeLists.txt
 cp package_ros1.xml package.xml
 
 cd $CWS/src
-git clone https://github.com/GT-RAIL/rosauth.git # rosauth
-
-cd $CWS/src
 git clone git clone https://github.com/RobotWebTools/rosbridge_suite
 cd $CWS/src/rosbridge_suite
 git checkout ros1
 
-pip install tornado future pymongo
+pip install tornado future pymongo # Missing python libs for rosauth
 
