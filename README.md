@@ -6,8 +6,13 @@
 In the bottom of the file, add the following line: \
 `$USER ALL=(ALL) NOPASSWD: ALL` \
 Save changes
-4. Clone Repo \
+3. Clone Repo \
    `git clone https://github.com/Gandlfer/CAVS-1` \
    `git checkout installation`
-5. Run Script`./Step.sh`
-
+4. Run Script`./Step.sh`
+5. Run image\
+   `singularity shell mavs-ros-m.image`
+7. Install dependency\
+   `source /opt/ros/melodic/setup.bash`\
+   `cd ~/catkin_ws`\
+   `catkin_make install`
