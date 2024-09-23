@@ -51,5 +51,11 @@ cp package_ros1.xml package.xml
 
 cd $CWS/src
 git clone https://github.com/GT-RAIL/rosauth.git # rosauth
+
+cd $CWS/src
+git clone git clone https://github.com/RobotWebTools/rosbridge_suite
+cd $CWS/src/rosbridge_suite
+git checkout ros1
+
 pip install tornado future pymongo
 
