@@ -1,10 +1,13 @@
 # CAVS-1
+## Script for Ubuntu 18.04 (Bionic) only
 1. Download image from Discord #cavs-documents-and-links
-2. Set no sudo password
-sudo visudo
-In the bottom of the file, add the following line:
-$USER ALL=(ALL) NOPASSWD: ALL
-3. Clone Repo
-git checkout installation
-4. ./Step.sh
+2. Set no sudo password \
+`sudo visudo` \
+In the bottom of the file, add the following line: \
+`$USER ALL=(ALL) NOPASSWD: ALL` \
+Save changes
+4. Clone Repo \
+   `git clone https://github.com/Gandlfer/CAVS-1` \
+   `git checkout installation`
+5. Run Script`./Step.sh`
 
