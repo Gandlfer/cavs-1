@@ -12,7 +12,10 @@ Save changes
 4. Run Script`./Step.sh`
 5. Run image\
    `singularity shell mavs-ros-m.image`
-7. Install dependency\
+6. Install dependency\
    `source /opt/ros/melodic/setup.bash`\
    `cd ~/catkin_ws`\
    `catkin_make install`
+7. `source ~/catkin_ws/devel/setup.bash`
+8. Launch mavs with `roslaunch nature mavs_example_proving_ground.launch`
+   
