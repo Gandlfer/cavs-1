@@ -10,7 +10,7 @@ Save changes and `exit`
 4. Clone Repo \
    `git clone https://github.com/Gandlfer/CAVS-1` \
    `git checkout installation`
-5. Run Script`./Step.sh`
+5. Run Script`./mavs_installation_script`
 6. Run image\
    `singularity shell mavs-ros-m.image`
 7. Install dependency\
