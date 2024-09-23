@@ -3,7 +3,7 @@
 WS=(~)
 sudo apt-get update && \
 sudo apt-get install -y build-essential \
-    libseccomp-dev pkg-config squashfs-tools cryptsetup git
+    libseccomp-dev pkg-config squashfs-tools cryptsetup git curl python-pip
 
 sudo rm -r /usr/local/go
 
@@ -24,7 +24,7 @@ cd ${GOPATH}/src/github.com/sylabs && \
 git clone https://github.com/sylabs/singularity.git && \
 cd singularity
 
-git checkout v3.6.3
+git checkout v3.11.3
 
 cd ${GOPATH}/src/github.com/sylabs/singularity && \
 ./mconfig && \
