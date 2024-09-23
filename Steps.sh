@@ -47,12 +47,14 @@ cd $CWS/src
 git clone https://github.com/GT-RAIL/rosauth.git # rosauth
 
 git clone https://github.com/CGoodin/nature-stack.git nature # nature
+
 cd $CWS/src/nature
+
 cp CMakeLists_ros1.cmake CMakeLists.txt
 cp package_ros1.xml package.xml
 
 cd $CWS/src
-git clone git clone https://github.com/RobotWebTools/rosbridge_suite
+git clone git clone https://github.com/RobotWebTools/rosbridge_suite # rosbridge_suite
 cd $CWS/src/rosbridge_suite
 git checkout ros1
 
