@@ -46,7 +46,7 @@ git clone https://github.com/CGoodin/mavs_ros # mavs_ros
 
 git clone https://github.com/CGoodin/nature-stack.git nature # nature
 cd $CWS/src/nature
-cp CMakeLists_ros1.cmake CmakeLists.txt
+cp CMakeLists_ros1.cmake CMakeLists.txt
 cp package_ros1.xml package.xml
 
 cd $CWS/src
