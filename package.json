@@ -9,20 +9,10 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
-    "roslib": "^1.4.1",
     "web-vitals": "^2.1.4"
   },
-  "type": "module",
-  "nodemonConfig": {
-    "ext": "js",
-    "ignore": [
-      "*.test.ts",
-      "db/*"
-    ],
-    "delay": "2"
-  },
   "scripts": {
-    "start": "nodemon ./src/index.js",
+    "start": "nodemon react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
