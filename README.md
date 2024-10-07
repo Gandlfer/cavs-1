@@ -68,3 +68,20 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+Idea:
+a ros connection handler - create connections to all types
+
+getTopicType for getting message type?
+
+Individual react components that pass ros as a prop handler for subscribing it
+
+App.js
+
+- creates a rosConnection
+- renders all feature components
+  Example: <Camera ros={ros}>
+  in Camera.js
+  getTopictype()
+  create topic with ros
+  subscribe (useState to update values)
