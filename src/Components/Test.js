@@ -3,8 +3,8 @@ import ROSLIB from "roslib";
 
 const Test = (props) => {
   const [data, setData] = useState(0);
-  let topicType;
   useEffect(() => {
+    let topicType;
     //Function to get the topic type
     props.ros.getTopicType(
       "/client_count",
