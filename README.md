@@ -85,3 +85,5 @@ App.js
   getTopictype()
   create topic with ros
   subscribe (useState to update values)
+
+Refer to https://robotwebtools.github.io/roslibjs/Ros.html for documentation
