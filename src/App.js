@@ -4,26 +4,21 @@ import ROSLIB from "roslib";
 import React, { useState, useEffect } from "react";
 import RosConnection from "./RosConnection";
 import Test from "./Components/Test";
+import IMU from "./Components/IMU";
 
 let ros = null;
-
+let test;
 function App() {
   const [loading, setLoading] = useState(true);
   const [rosConn, setRosConn] = useState(false);
   const [error, setError] = useState(null);
   useEffect(() => {
     async function connection() {
-      try {
-        setLoading(true);
-        ros = new ROSLIB.Ros({
-          url: "ws://localhost:9090",
-        });
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        setError(error);
-        setLoading(false);
-      }
+      setLoading(true);
+      ros = new ROSLIB.Ros({
+        url: "ws://localhost:9090",
+      });
+      setLoading(false);
     }
     connection();
     return () => {
@@ -33,6 +28,7 @@ function App() {
     };
   }, [ros]);
   if (!loading && ros != null) {
+    //console.log(ros);
     ros.on("error", function (error) {
       console.log("Connection Error" + error);
       setRosConn(false);
@@ -51,11 +47,11 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          {rosConn ? "Connected to Ros" : loading ? "Trying to Connect" : error}
+          {loading ? "Trying to Connect" : null}
+          {rosConn ? "Connected to Ros" : "Disconnected"}
         </p>
-        {
-          rosConn ? <Test ros={ros} /> : null //<Test ros={rosState}/> : null
-        }
+        {rosConn ? <IMU ros={ros} /> : null}
+        {rosConn ? <Test ros={ros} /> : null}
       </header>
     </div>
   );
