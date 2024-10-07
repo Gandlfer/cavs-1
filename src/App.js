@@ -7,7 +7,7 @@ import Test from "./Components/Test";
 import IMU from "./Components/IMU";
 
 let ros = null;
-let test;
+
 function App() {
   const [loading, setLoading] = useState(true);
   const [rosConn, setRosConn] = useState(false);
@@ -50,8 +50,8 @@ function App() {
           {loading ? "Trying to Connect" : null}
           {rosConn ? "Connected to Ros" : "Disconnected"}
         </p>
-        {rosConn ? <IMU ros={ros} /> : null}
         {rosConn ? <Test ros={ros} /> : null}
+        {rosConn ? <IMU ros={ros} /> : null}
       </header>
     </div>
   );

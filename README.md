@@ -87,3 +87,6 @@ App.js
   subscribe (useState to update values)
 
 Refer to https://robotwebtools.github.io/roslibjs/Ros.html for documentation
+
+Bugs:
+getTopicType is reading null if i swap the return html code in App.js for IMU and Tests (Refreshing webpage fixes it, maybe something to do with hot-reload)
