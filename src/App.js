@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import RosConnection from "./RosConnection";
 import Test from "./Components/Test";
 import IMU from "./Components/IMU";
+import Camera from "./Components/Camera";
 
 let ros = null;
 
@@ -43,16 +44,14 @@ function App() {
     });
   }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          {loading ? "Trying to Connect" : null}
-          {rosConn ? "Connected to Ros" : "Disconnected"}
-        </p>
-        {rosConn ? <Test ros={ros} /> : null}
-        {rosConn ? <IMU ros={ros} /> : null}
-      </header>
+    <div>
+      <p>
+        {loading ? "Trying to Connect" : null}
+        {rosConn ? "Connected to Ros" : "Disconnected"}
+      </p>
+      {rosConn ? <Camera ros={ros} /> : null}
+      {/* {rosConn ? <Test ros={ros} /> : null}
+        {rosConn ? <IMU ros={ros} /> : null} */}
     </div>
   );
 }
