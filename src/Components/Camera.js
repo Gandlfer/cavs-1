@@ -1,62 +1,132 @@
-import React, { useState, useEffect, createElement, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  createElement,
+  useRef,
+  useMemo,
+} from "react";
 import ROSLIB from "roslib";
 
 const Camera = (props) => {
   var canvasRef = useRef(null);
+  var temp = false;
   const name = "/mavs_ros/image";
+  const [message, setMessage] = useState(0);
+  //const [subbed, setSubbed] = useState(false);
+  //const [messageCount, setMessageCount] = useState(0);
+  const messageCountRef = useRef(0);
+  const intervalRef = useRef(Date.now());
+  const prevTimeStamp = useRef(0);
+  const pubRateRef = useRef(0);
+  const [pubRate, setPubRate] = useState(0);
   const [cameraHeight, setCameraHeight] = useState(0);
   const [cameraWidth, setCameraWidth] = useState(0);
+  let topicType;
+  //Function to get the topic type
+  props.ros.getTopicType(
+    name,
+    (type) => {
+      topicType = type;
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+  //Initialize a topic to subscribe to
+  const testTopic = new ROSLIB.Topic({
+    ros: props.ros,
+    name: name,
+    messageType: topicType,
+  });
+  // const subFunction = useMemo(() => {
+  //   testTopic.subscribe((message) => {
+  //     setMessage(message);
+  //     drawCanvas(message, canvasRef);
+  //     setCameraHeight(message.height);
+  //     setCameraWidth(message.width);
+  //   });
+  // });
+  // if (!subbed) {
+  //   testTopic.subscribe((message) => {
+  //     setSubbed(true);
+  //     //setMessage(message);
+  //     setMessageCount(messageCount + 1);
+  //     console.log(messageCount);
+  //     drawCanvas(message, canvasRef);
+  //     setCameraHeight(message.height);
+  //     setCameraWidth(message.width);
+  //   });
+  // }
+  // testTopic.subscribe((message) => {
+  //   setMessage(message);
+  //   setMessageCount(messageCount + 1);
+  //   //   //   setMessageCount(messageCount + 1);
+  //   //   //   //setMessage(message);
+  //   //   //   // setMessageCount(messageCount + 1);
+  //   //   //   // console.log(messageCount);
+  //   drawCanvas(message, canvasRef);
+  //   setCameraHeight(message.height);
+  //   setCameraWidth(message.width);
+  // });
 
   useEffect(() => {
-    let topicType;
-    //Function to get the topic type
-    props.ros.getTopicType(
-      name,
-      (type) => {
-        topicType = type;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-    //Initialize a topic to subscribe to
-    const testTopic = new ROSLIB.Topic({
-      ros: props.ros,
-      name: name,
-      messageType: topicType,
-    });
-    //subscribe to the topic and update the data
+    //console.log(messageCount);
+    // if (message != 0) {
+    //   console.log(messageCount);
+    //   //setMessageCount(messageCount + 1);
+    //   drawCanvas(message, canvasRef);
+    //   // setCameraHeight(message.height);
+    //   // setCameraWidth(message.width);
+    // }
+
     testTopic.subscribe((message) => {
+      messageCountRef.current += 1;
+      //const startTime = Date.now();
       //console.log(message);
-      var byteArray = base64ToUint8Array(message.data);
-      const canvas = canvasRef.current;
-      const context = canvas.getContext("2d");
+      if (prevTimeStamp.current != 0) {
+        pubRateRef.current = 1 / ((Date.now() - prevTimeStamp.current) / 1000);
+        //setPubRate(1 / ((Date.now() - prevTimeStamp.current) / 1000));
+        console.log(pubRateRef.current);
+      }
+      prevTimeStamp.current = Date.now();
+      intervalRef.current = Date.now();
+      //console.log(pubRate);
+      // intervalRef.current = setInterval(() => {
+      //   const elapsedTime = (Date.now() - startTime) / 1000; // in seconds
+      //   const rate = messageCountRef.current / elapsedTime;
+      //   console.log(rate);
+      //   // //console.log(elapsedTime);
+      //   // if (elapsedTime > 0) {
+      //   //   setPubRate(messageCountRef.current / elapsedTime); // messages per second
+      //   //   console.log(messageCountRef.current / elapsedTime);
+      //   //   console.log(elapsedTime);
+      //   // }
+      // }, 1000); // update every second
+      setMessage(message);
+      drawCanvas(message, canvasRef);
       setCameraHeight(message.height);
       setCameraWidth(message.width);
-      //context.width = message.width;
-      //context.height = message.height;
-      var imageData = context.createImageData(message.width, message.height);
-      //console.log(imageData);
-      var data = imageData.data;
-
-      for (var i = 0; i < byteArray.length; i += 3) {
-        var canvasIndex = (i / 3) * 4;
-        data[canvasIndex] = byteArray[i]; // Red
-        data[canvasIndex + 1] = byteArray[i + 1]; // Green
-        data[canvasIndex + 2] = byteArray[i + 2]; // Blue
-        data[canvasIndex + 3] = 255; // Alpha, fully opaque
-      }
-
-      context.putImageData(imageData, 0, 0);
-      console.log(context);
-      //console.log(canvasRef.current.height);
-      //canvasRef.current.height = 160;
-      //canvasRef = context;
-      //canvasRef.current.clientHeight = message.height;
-      //console.log(canvasRef.current.clientHeight);
-
-      //setData(message.data);
     });
+
+    //subscribe to the topic and update the data
+    // if (!temp) {
+    //   testTopic.subscribe((message) => {
+    //     setMessage(message);
+
+    //     setMessageCount(messageCount + 1);
+    //     // drawCanvas(message, canvasRef);
+    //     // setCameraHeight(message.height);
+    //     // setCameraWidth(message.width);
+
+    //     temp = true;
+    //   });
+    // }
+
+    // if (message != 0) {
+    //   drawCanvas(message, canvasRef);
+    //   setCameraHeight(message.height);
+    //   setCameraWidth(message.width);
+    // }
 
     return () => {
       testTopic.unsubscribe();
@@ -64,16 +134,10 @@ const Camera = (props) => {
   }, []);
 
   return (
-    <canvas ref={canvasRef} height={cameraHeight} width={cameraWidth} />
-
-    // <div>
-    //   {createElement("image")}
-    //   <img
-    //     src={`data:image/png;base64,${data}`}
-    //     alt={"Ros Image"}
-    //     style={{ width: 384, height: 256 }}
-    //   />
-    // </div>
+    <div>
+      <p>{pubRateRef.current}</p>
+      <canvas ref={canvasRef} height={cameraHeight} width={cameraWidth} />
+    </div>
   );
 };
 
@@ -87,3 +151,21 @@ function base64ToUint8Array(base64) {
   return uint8Array;
 }
 export default Camera;
+
+function drawCanvas(message, canvasRef) {
+  var byteArray = base64ToUint8Array(message.data);
+  const canvas = canvasRef.current;
+  const context = canvas.getContext("2d");
+  var imageData = context.createImageData(message.width, message.height);
+
+  var data = imageData.data;
+
+  for (var i = 0; i < byteArray.length; i += 3) {
+    var canvasIndex = (i / 3) * 4;
+    data[canvasIndex] = byteArray[i]; // Red
+    data[canvasIndex + 1] = byteArray[i + 1]; // Green
+    data[canvasIndex + 2] = byteArray[i + 2]; // Blue
+    data[canvasIndex + 3] = 255; // Alpha, fully opaque
+  }
+  context.putImageData(imageData, 0, 0);
+}
