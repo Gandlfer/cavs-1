@@ -79,12 +79,15 @@ const Camera = (props) => {
     //   // setCameraWidth(message.width);
     // }
 
+    // have the pubrate number change less frequently
     testTopic.subscribe((message) => {
       messageCountRef.current += 1;
       //const startTime = Date.now();
       //console.log(message);
       if (prevTimeStamp.current != 0) {
-        pubRateRef.current = 1 / ((Date.now() - prevTimeStamp.current) / 1000);
+        pubRateRef.current = Math.ceil(
+          1 / ((Date.now() - prevTimeStamp.current) / 1000)
+        );
         //setPubRate(1 / ((Date.now() - prevTimeStamp.current) / 1000));
         console.log(pubRateRef.current);
       }
