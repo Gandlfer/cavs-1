@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as Io5 from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { NavLink, Link, useLocation } from "react-router-dom";
 import { SidebarData } from "./SidebarData";
 import "../index.css";
 import { IconContext } from "react-icons";
@@ -8,6 +8,9 @@ import { IconContext } from "react-icons";
 export default function Navbar() {
   const [sidebar, setSidebar] = useState(false);
   const showSidebar = () => setSidebar(!sidebar);
+  const location = useLocation();
+  const { pathname } = location;
+  const splitLocation = pathname.split("/");
   return (
     <>
       <IconContext.Provider value={{ color: "undefined" }}>
@@ -23,17 +26,48 @@ export default function Navbar() {
                 <Io5.IoCloseCircleOutline />
               </Link>
             </li>
-            {SidebarData.map((item, index) => {
-              return (
-                <li key={index} className={item.cName}>
-                  <Link to={item.path}>
-                    {item.icons}
-                    <span>{item.title}</span>
-                  </Link>
-                </li>
-              );
-            })}
+            <li
+              className={
+                splitLocation[1] === "map" ? "nav-text active" : "nav-text"
+              }
+            >
+              <Link to="/map">
+                <Io5.IoMap />
+                <span>Map</span>
+              </Link>
+            </li>
+            <li
+              className={
+                splitLocation[1] === "sensor" ? "nav-text active" : "nav-text"
+              }
+            >
+              <Link to="/sensor">
+                <Io5.IoCamera />
+                <span>Sensor</span>
+              </Link>
+            </li>
+            <li
+              className={
+                splitLocation[1] === "status" ? "nav-text active" : "nav-text"
+              }
+            >
+              <Link to="/status">
+                <Io5.IoTerminal />
+                <span>Status</span>
+              </Link>
+            </li>
           </ul>
+          <div className="controller">
+            <button className="ctrl-button">
+              <Io5.IoPlay />
+            </button>
+            <button className="ctrl-button">
+              <Io5.IoPause />
+            </button>
+            <button className="ctrl-button">
+              <Io5.IoStop />
+            </button>
+          </div>
         </nav>
       </IconContext.Provider>
     </>
