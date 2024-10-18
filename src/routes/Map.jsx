@@ -3,15 +3,17 @@ import Card from "../components/Card";
 import "../index.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "./Map.css";
+import { MdHeight } from "react-icons/md";
 
 export default function Map() {
   return (
     <div id="map-tab" className="body">
-      <div id="map">
+      <div id="map" className="card">
         <MapContainer
           center={[51.505, -0.09]}
           zoom={13}
-          scrollWheelZoom={false}
+          scrollWheelZoom={true}
+          style={{ height: "100%", width: "100%" }}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -24,6 +26,8 @@ export default function Map() {
           </Marker>
         </MapContainer>
       </div>
+      <Card />
+      <Card />
     </div>
   );
 }
