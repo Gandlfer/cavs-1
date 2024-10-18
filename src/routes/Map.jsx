@@ -1,5 +1,5 @@
 import React from "react";
-import Card from "../components/Card";
+import Card from "../Components/Card";
 import "../index.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "./Map.css";

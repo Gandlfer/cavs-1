@@ -5,6 +5,7 @@ import React, {
   useRef,
   useMemo,
 } from "react";
+import "../index.css";
 import ROSLIB from "roslib";
 
 const Camera = (props) => {
