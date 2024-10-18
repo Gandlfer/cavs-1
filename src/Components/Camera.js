@@ -138,9 +138,17 @@ const Camera = (props) => {
   }, []);
 
   return (
-    <div>
+    <div className="card">
       <p>{pubRateRef.current}</p>
-      <canvas ref={canvasRef} height={cameraHeight} width={cameraWidth} />
+      <canvas
+        className="card-img"
+        ref={canvasRef}
+        height={cameraHeight}
+        width={cameraWidth}
+      />
+      {/* <img className="card-img" src={pic} alt="camera topic"></img>
+      <h2 className="card-name">Card</h2> */}
+      <p>Camera from MAVS</p>
     </div>
   );
 };
