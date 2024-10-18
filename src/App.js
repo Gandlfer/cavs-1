@@ -2,10 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import ROSLIB from "roslib";
 import React, { useState, useEffect } from "react";
-import RosConnection from "./RosConnection";
-import Test from "./Components/Test";
-import IMU from "./Components/IMU";
-import Camera from "./Components/Camera";
+import Camera from "./Components/Camera.js";
 
 let ros = null;
 
