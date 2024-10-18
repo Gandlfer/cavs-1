@@ -12,7 +12,7 @@ const Camera = (props) => {
   var canvasRef = useRef(null);
   var temp = false;
   const name = "/mavs_ros/image";
-  const [message, setMessage] = useState(0);
+  const [error, setError] = useState({ err: false, errMsg: "" });
   //const [subbed, setSubbed] = useState(false);
   //const [messageCount, setMessageCount] = useState(0);
   const messageCountRef = useRef(0);
@@ -22,6 +22,7 @@ const Camera = (props) => {
   const [pubRate, setPubRate] = useState(0);
   const [cameraHeight, setCameraHeight] = useState(0);
   const [cameraWidth, setCameraWidth] = useState(0);
+
   let topicType;
   //Function to get the topic type
   props.ros.getTopicType(
@@ -31,6 +32,7 @@ const Camera = (props) => {
     },
     (error) => {
       console.log(error);
+      setError({ err: true, errMsg: error });
     }
   );
   //Initialize a topic to subscribe to
@@ -89,7 +91,6 @@ const Camera = (props) => {
         pubRateRef.current = Math.ceil(
           1 / ((Date.now() - prevTimeStamp.current) / 1000)
         );
-        //setPubRate(1 / ((Date.now() - prevTimeStamp.current) / 1000));
         console.log(pubRateRef.current);
       }
       prevTimeStamp.current = Date.now();
@@ -106,7 +107,7 @@ const Camera = (props) => {
       //   //   console.log(elapsedTime);
       //   // }
       // }, 1000); // update every second
-      setMessage(message);
+      setPubRate(pubRateRef.current);
       drawCanvas(message, canvasRef);
       setCameraHeight(message.height);
       setCameraWidth(message.width);
@@ -139,16 +140,14 @@ const Camera = (props) => {
 
   return (
     <div className="card">
-      <p>{pubRateRef.current}</p>
+      <p>{error.err ? null : "Publishing Rate: " + pubRate}</p>
       <canvas
         className="card-img"
         ref={canvasRef}
         height={cameraHeight}
         width={cameraWidth}
       />
-      {/* <img className="card-img" src={pic} alt="camera topic"></img>
-      <h2 className="card-name">Card</h2> */}
-      <p>Camera from MAVS</p>
+      <p>{error.err ? error.errMsg : "Camera from MAVS"}</p>
     </div>
   );
 };
