@@ -3,6 +3,7 @@ import "./App.css";
 import ROSLIB from "roslib";
 import React, { useState, useEffect } from "react";
 import Camera from "./Components/Camera.js";
+import Test from "./Components/Test.js";
 
 let ros = null;
 
@@ -43,10 +44,11 @@ function App() {
   return (
     <div>
       <p>
-        {loading ? "Trying to Connect" : null}
-        {rosConn ? "Connected to Ros" : "Disconnected"}
+        {/* {loading ? "Trying to Connect" : null}
+        {rosConn ? "Connected to Ros" : "Disconnected"} */}
       </p>
-      {rosConn ? <Camera ros={ros} /> : null}
+      {rosConn ? <Test ros={ros} /> : null}
+      {/* {rosConn ? <Camera ros={ros} /> : null} */}
       {/* {rosConn ? <Test ros={ros} /> : null}
         {rosConn ? <IMU ros={ros} /> : null} */}
     </div>
