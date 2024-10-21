@@ -24,7 +24,6 @@
   align-items: center;
   justify-content: center;
 }
-
 /*Body CSS*/
 .body {
   border-radius: 10px 10px 0px 0px;
@@ -43,11 +42,12 @@
   object-fit: contain;
   padding: 4%;
   padding-bottom: 0.5%;
+  padding-top: 10px;
 }
 /*Animation when the sidebar open*/
 .nav-menu.active~.body {
   transition: 450ms;
-  margin-left: 20vw;
+  margin-left: 10vw;
 }
 .nav-menu~.body {
   transition: 450ms;
@@ -56,25 +56,36 @@
 /*Temporary content cards*/
 .card {
   flex-grow: 1;
-  aspect-ratio: 16 / 9;
-  min-height: 10%;
+  min-height: 300px;
   width: auto;
-  min-width: 40%;
+  min-width: 20vw;
   background-color: rgb(119, 7, 7);
   border: 3px solid rgb(255, 253, 253);
   border-radius: 10px;
-  text-align: center;
   display: inline-flexbox;
-  margin: 10px;
   padding: 2px;
+  text-align: center;
+}
+.card-title {
+  border-bottom: 2px solid rgb(255, 255, 255);
+  border-radius: 10px 10px 0 0; 
+  margin-bottom: 20px;
+  padding-left: 5px;
+  font-size: 2rem;
+  text-align: start;
 }
 .card-name {
   font-size: auto;
 }
 .card-img{
-  max-width: 50%;
+  max-width: 30%;
+  object-fit: scale-down;
 }
-
+.sample-img{
+  border: 1px solid green;
+  height: 350px;
+  margin: 0;
+}
 /* Navbar CSS */
 .navbar {
   background-color:  #f8bdaa;
@@ -110,14 +121,15 @@
 
 .nav-menu {
   background-color:  #f8bdaa;
-  width: 20vw;
+  width: 10vw;
+  min-width: 120px;
   height: 100vh;
   display: flex;
   justify-content: center;
   position: fixed;
   top: 0;
   left: -100%;
-  transition: 850ms;
+  transition: 450ms;
 }
 
 .nav-menu.active {
@@ -129,7 +141,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 8px 0px 8px 16px;
+  padding: 8px 0px 8px 8px;
   list-style: none;
   height: 60px;
   right: -1;
@@ -154,7 +166,7 @@
 .nav-text.active {
   background-color: white;
   border-radius: 10px 0px 0px 10px;
-  margin-left: 10px;
+  margin-left: 5px;
 }
 .nav-menu-items {
   width: 100%;
@@ -169,8 +181,12 @@
   align-items: center;
 }
 
-span {
-  margin-left: 10px;
+#nav-span {
+  margin-right: 5px;
+  display: flex;
+  align-items: center;
+  align-content: space-evenly;
+  justify-content: center;
 }
 
 .controller {
@@ -205,7 +221,7 @@ span {
 .status-card{
   border: 1px solid black;
   border-radius: 10px;
-  background-color: maroon;
+  background-color: rgb(90, 90, 90);
   height: 80vh;
   width: 20vw;
   flex-grow: 1;
@@ -214,6 +230,48 @@ span {
   align-content: flex-start;
   padding: 2px;
 }
+.topic-list{
+  position: relative;
+  margin: 2%;
+}
+.topic {
+  display: flex;
+  margin: 5px;
+  position: relative;
+  width: 100fr;
+  height: 2em;
+
+}
+.topic-name{
+  border-bottom: 1px solid white;
+  display: flex;
+  font-size: large;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+#light{
+  background: rgba(158, 158, 158, 0.514);
+}
+#dark {
+  background: hsla(0, 0%, 27%, 0.5);
+}
+.topic-color {
+  border-bottom: 1px solid#fff;
+  display: inline-flex;
+  position: absolute;
+  width: 10%;
+  height: 100%;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+#red{
+  background: red;
+}
+#green {
+  background: green;
+}
 #console{
-  background-color: black;
+  background: black;
 }

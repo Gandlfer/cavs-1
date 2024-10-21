@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App.js";
 import { Router } from "./main.jsx";
 
+document.title = "CAVS";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 //console.log(s)
 root.render(<Router />);

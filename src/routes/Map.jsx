@@ -26,8 +26,22 @@ export default function Map() {
           </Marker>
         </MapContainer>
       </div>
-      <Card />
-      <Card />
+      <div className="card">
+        <h3 className="card-title"> Occupancy grid </h3>
+        <img
+          className="sample-img"
+          src="https://raw.githubusercontent.com/KristofRobot/frobo/master/bagfile/rviz_odom.png"
+          alt="occupancy grid sample"
+        />
+      </div>
+      <div className="card">
+        <h3 className="card-title"> Lidar </h3>
+        <img
+          className="sample-img"
+          src="https://s3-prod.autonews.com/s3fs-public/Velodyne_Lidar_Alpha_Prime-01_i.jpg"
+          alt="lidar"
+        />
+      </div>
     </div>
   );
 }

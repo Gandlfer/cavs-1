@@ -32,8 +32,10 @@ export default function Navbar() {
               }
             >
               <Link to="/map">
-                <Io5.IoMap />
-                <span>Map</span>
+                <span id="nav-span">
+                  <Io5.IoMap />
+                </span>
+                <span id="nav-span">Map</span>
               </Link>
             </li>
             <li
@@ -42,8 +44,10 @@ export default function Navbar() {
               }
             >
               <Link to="/sensor">
-                <Io5.IoCamera />
-                <span>Sensor</span>
+                <span id="nav-span">
+                  <Io5.IoCamera />
+                </span>
+                <span id="nav-span">Sensor</span>
               </Link>
             </li>
             <li
@@ -52,8 +56,10 @@ export default function Navbar() {
               }
             >
               <Link to="/status">
-                <Io5.IoTerminal />
-                <span>Status</span>
+                <span id="nav-span">
+                  <Io5.IoTerminal />
+                </span>
+                <span id="nav-span">Status</span>
               </Link>
             </li>
           </ul>

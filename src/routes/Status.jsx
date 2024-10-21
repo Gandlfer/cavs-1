@@ -1,24 +1,38 @@
 import React from "react";
 import Card from "../Components/Card";
+import { TopicData } from "./TopicData";
 
 export default function Status() {
   return (
     <div id="status-tab" className="body">
       <div id="console" className="status-card">
-        console
+        <h3 className="card-title">Console</h3>
       </div>
       <div id="ros-bag" className="status-card">
-        ros-bag
+        <h3 className="card-title">Ros-Bag</h3>
       </div>
-      <div id="topics-list" className="status-card">
-        <h4>topics</h4>
-        <ul>
-          <li>Topic 1</li>
-          <li>Topic 2</li>
-          <li>Topic 3</li>
-          <li>Topic 4</li>
-          <li>Topic 5</li>
-        </ul>
+      <div id="topics-container" className="status-card">
+        <h3 className="card-title">Topics</h3>
+        <div className="topic-list">
+          <ul>
+            {TopicData.map((val, key) => {
+              return (
+                <li key={key} className="topic">
+                  <span
+                    className="topic-name"
+                    id={key % 2 == 0 ? "light" : "dark"}
+                  >
+                    {val.title}
+                  </span>
+                  <div
+                    className="topic-color"
+                    id={val.status ? "green" : "red"}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </div>
   );
