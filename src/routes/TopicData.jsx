@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export const TopicData = [
+const TopicData = [
   {
     title: "Topic 1",
     status: 1,
@@ -67,3 +67,5 @@ export const TopicData = [
     cName: "topic",
   },
 ];
+
+export default TopicData;
