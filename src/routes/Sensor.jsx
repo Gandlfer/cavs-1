@@ -4,11 +4,11 @@ import Camera from "../Components/Camera";
 import { RosProvider, useRos } from "../Utils/RosConnProvider";
 
 export default function Sensor() {
-  const { ros, isCon } = useRos();
+  const { isCon } = useRos();
 
   return (
     <div id="sensor-tab" className="body">
-      {isCon ? <Camera ros={ros} /> : <Card />}
+      {isCon ? <Camera/> : <Card />}
       <div className="card">
         <h3 className="card-title"> Lidar </h3>
         <img
