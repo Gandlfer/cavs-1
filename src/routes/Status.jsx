@@ -1,8 +1,11 @@
 import React from "react";
 import Card from "../Components/Card";
-import { TopicData } from "./TopicData";
+import TopicDataTest from "./TopicDataTest";
+import TopicData from "./TopicData";
+import { useRos } from "../Utils/RosConnProvider";
 
 export default function Status() {
+  const {isCon}= useRos()
   return (
     <div id="status-tab" className="body">
       <div id="console" className="status-card">
@@ -13,8 +16,28 @@ export default function Status() {
       </div>
       <div id="topics-container" className="status-card">
         <h3 className="card-title">Topics</h3>
+        
         <div className="topic-list">
+          {/* {isCon? null : <ul>
+            {TopicData.map((val, key) => {
+              return (
+                <li key={key} className="topic">
+                  <span
+                    className="topic-name"
+                    id={key % 2 == 0 ? "light" : "dark"}
+                  >
+                    {val.title}
+                  </span>
+                  <div
+                    className="topic-color"
+                    id={val.status ? "green" : "red"}
+                  />
+                </li>
+              );
+            })} */}
+        {isCon ? <TopicDataTest/> :
           <ul>
+            
             {TopicData.map((val, key) => {
               return (
                 <li key={key} className="topic">
@@ -32,7 +55,9 @@ export default function Status() {
               );
             })}
           </ul>
+        }  
         </div>
+
       </div>
     </div>
   );
