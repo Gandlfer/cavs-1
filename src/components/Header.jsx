@@ -22,13 +22,13 @@ export default function Header() {
     <header className="header">
       <h1>CAVS</h1>
       <div className="controller">
-        {/* <button className="ctrl-button" >
+        {/* {/* <button className="ctrl-button" >
               <Io5.IoPlay onClick={buttonPress}/>
-            </button> */}
+            </button> 
         <ControllerButton />
         <button className="ctrl-button">
           <Io5.IoPause />
-        </button>
+        </button> */}
         <button className="ctrl-button">
           <Io5.IoPower />
         </button>

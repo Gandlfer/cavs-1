@@ -6,6 +6,7 @@ import "../index.css";
 import { IconContext } from "react-icons";
 import { useRos } from "../Utils/RosConnProvider";
 import ROSLIB from "roslib";
+import ControllerButton from "./ControllerButtons";
 
 export default function Navbar() {
   const { ros, isCon, refresh } = useRos();
@@ -67,6 +68,15 @@ export default function Navbar() {
               </Link>
             </li>
           </ul>
+          <div className="navbar-controller">
+            {/* <button className="ctrl-button" >
+              <Io5.IoPlay onClick={buttonPress}/>
+            </button> */}
+            <ControllerButton/>
+            <button className="ctrl-button">
+              <Io5.IoPause />
+            </button>
+          </div>
         </nav>
       </IconContext.Provider>
     </>
