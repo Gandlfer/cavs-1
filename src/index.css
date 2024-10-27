@@ -65,6 +65,7 @@
   display: inline-flexbox;
   padding: 2px;
   text-align: center;
+  position: relative;
 }
 .card-title {
   border-bottom: 2px solid rgb(255, 255, 255);
@@ -229,32 +230,35 @@
   font-size: large;
   align-content: flex-start;
   padding: 2px;
+  display: inline-block;
+  position: relative;
 }
 .topic-list{
-  position: relative;
+  width: 92%;
+  height: 90%;
+  position: absolute;
+  display: inline-block;
   margin: 2%;
+  overflow: hidden;
+}
+.topic-list:hover{
+  overflow-y: scroll;
 }
 .topic {
-  display: flex;
+  display: inline-flex;
   margin: 5px;
   position: relative;
-  width: 100fr;
+  width: 100%;
   height: 2em;
 
 }
 .topic-name{
   border-bottom: 1px solid white;
-  display: flex;
+  display: inline;
   font-size: large;
   position: absolute;
   width: 100%;
   height: 100%;
-}
-#light{
-  background: rgba(158, 158, 158, 0.514);
-}
-#dark {
-  background: hsla(0, 0%, 27%, 0.5);
 }
 .topic-color {
   border-bottom: 1px solid#fff;
@@ -265,6 +269,15 @@
   right: 0;
   top: 0;
   bottom: 0;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+#light{
+  background: rgba(158, 158, 158, 0.514);
+}
+#dark {
+  background: hsla(0, 0%, 27%, 0.5);
 }
 #red{
   background: red;
