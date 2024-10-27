@@ -12,11 +12,11 @@
   grid-template-rows: 50px 1fr;
   grid-template-columns: 50px 1fr;
   z-index: -2;
-  background-color: #f8bdaa;
+  background-color: #853d3d;
 }
 /*Header CSS*/
 .header {
-  background-color:   #f8bdaa;
+  background-color:   #853d3d;
   position: sticky;
   grid-row: 1 / 1;
   grid-column: 1 / 3;
@@ -27,7 +27,7 @@
 /*Body CSS*/
 .body {
   border-radius: 10px 10px 0px 0px;
-  background-color: #ffffff;
+  background-color: #e9e9e9;
   min-height: 100vh;
   display: flex;
   flex-wrap: wrap;
@@ -36,7 +36,7 @@
   justify-content: center;
   gap: 5px;
   font-size: 3rem;
-  color: #ffffff;
+  color: #e9e9e9;
   grid-row: 2 / 3;
   grid-column: 1 / 3;
   object-fit: contain;
@@ -59,7 +59,7 @@
   min-height: 300px;
   width: auto;
   min-width: 20vw;
-  background-color: rgb(119, 7, 7);
+  background-color: #acacac;
   border: 3px solid rgb(255, 253, 253);
   border-radius: 10px;
   display: inline-flexbox;
@@ -74,6 +74,7 @@
   padding-left: 5px;
   font-size: 2rem;
   text-align: start;
+  color: #000;
 }
 .card-name {
   font-size: auto;
@@ -89,7 +90,7 @@
 }
 /* Navbar CSS */
 .navbar {
-  background-color:  #f8bdaa;
+  background-color:  #853d3d;
   display: flex;
   align-items: center;
   align-content: center;
@@ -108,7 +109,7 @@
 }
 
 .menu-bar:hover {
-  color: maroon;
+  color: #acacac;
 }
 
 .close-tab {
@@ -121,7 +122,7 @@
 }
 
 .nav-menu {
-  background-color:  #f8bdaa;
+  background-color:  #853d3d;
   width: 10vw;
   min-width: 120px;
   height: 100vh;
@@ -165,7 +166,7 @@
   color: #fff;
 }
 .nav-text.active {
-  background-color: white;
+  background-color: #e9e9e9;
   border-radius: 10px 0px 0px 10px;
   margin-left: 5px;
 }
@@ -174,7 +175,7 @@
 }
 
 .navbar-toggle {
-  background-color:   #f8bdaa;
+  background-color:   #853d3d;
   width: 100%;
   height: 80px;
   display: flex;
@@ -222,7 +223,7 @@
 .status-card{
   border: 1px solid black;
   border-radius: 10px;
-  background-color: rgb(90, 90, 90);
+  background-color: #acacac;
   height: 80vh;
   width: 20vw;
   flex-grow: 1;
@@ -254,6 +255,7 @@
 }
 .topic-name{
   border-bottom: 1px solid white;
+  color: black;
   display: inline;
   font-size: large;
   position: absolute;
@@ -284,7 +286,4 @@
 }
 #green {
   background: green;
-}
-#console{
-  background: black;
 }
