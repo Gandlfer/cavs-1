@@ -10,13 +10,13 @@ import {
 } from "react-leaflet";
 import "./Map.css";
 import { MdHeight } from "react-icons/md";
-import { polyline1 } from "./MapData";
+import MapComponent from "../Components/MapComponent";
 
 export default function Map() {
   return (
     <div id="map-tab" className="body">
       <div id="map" className="card">
-        <MapContainer
+        {/* <MapContainer
           center={[33.453892, -88.788887]}
           zoom={17}
           scrollWheelZoom={true}
@@ -37,7 +37,8 @@ export default function Map() {
             </Popup>
           </Marker>
           <Polyline pathOption={{ color: "red" }} positions={polyline1} />
-        </MapContainer>
+        </MapContainer> */}
+        <MapComponent/>
       </div>
       <div className="card">
         <h3 className="card-title"> Lidar </h3>
