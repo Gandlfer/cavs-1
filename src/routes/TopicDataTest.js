@@ -22,7 +22,9 @@ const TopicDataTest = () => {
                 id={
                   topicSubDataRef.current[topic].pubRate > 0 ? "green" : "red"
                 }
-              />
+              >
+                {topicSubDataRef.current[topic].pubRate}
+              </div>
             </li>
           ))
         : null}
