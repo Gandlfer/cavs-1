@@ -16,7 +16,7 @@ const MapComponent = () => {
   }, [ros, isCon, refresh]);
   return (
     <>
-      {!isCon ? null : (
+      {isCon ? null : (
         <MapContainer
           center={[33.453892, -88.788887]}
           zoom={17}
