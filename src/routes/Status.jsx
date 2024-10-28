@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "../Components/Card";
-import TopicDataTest from "./TopicDataTest";
+import TopicPublishRate from "../Components/TopicPublishRate";
 import TopicData from "./TopicData";
 import { useRos } from "../Utils/RosConnProvider";
 
@@ -36,7 +36,7 @@ export default function Status() {
               );
             })} */}
           {isCon ? (
-            <TopicDataTest />
+            <TopicPublishRate />
           ) : (
             <ul>
               {TopicData.map((val, key) => {

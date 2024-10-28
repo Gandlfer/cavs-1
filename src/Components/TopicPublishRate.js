@@ -2,7 +2,7 @@ import ROSLIB from "roslib";
 import { useState, useEffect, useRef } from "react";
 import { useRos } from "../Utils/RosConnProvider.js";
 
-const TopicDataTest = () => {
+const TopicPublishRate = () => {
   const { ros, isCon, topicSubDataRef, refresh } = useRos();
   useEffect(() => {}, [refresh, ros, isCon]);
   return (
@@ -31,4 +31,4 @@ const TopicDataTest = () => {
     </div>
   );
 };
-export default TopicDataTest;
+export default TopicPublishRate;
