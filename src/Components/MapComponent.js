@@ -1,4 +1,4 @@
-import { polyline1 } from "./MapData.jsx";
+import { polyline1 } from "../Placeholder data files/MapData.jsx";
 import {
   MapContainer,
   TileLayer,
