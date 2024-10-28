@@ -27,7 +27,7 @@ export const RosProvider = ({ children }) => {
     function connection() {
       setLoading(true);
       rosConn = new ROSLIB.Ros({
-        url: "ws://tirian-33.ddns.net:9090",
+        url: "ws://localhost:9090",
       });
       setRos(rosConn);
       setLoading(false);
@@ -42,7 +42,8 @@ export const RosProvider = ({ children }) => {
             topicName == "/mavs_ros/image" ||
             topicName == "/nature/global_path" ||
             topicName == "/nature/local_path" ||
-            topicName == "/nature/occupancy_grid"
+            topicName == "/nature/occupancy_grid" ||
+            topicName == "/nature/odometry"
           ) {
             const testTopic = new ROSLIB.Topic({
               ros: ros,
