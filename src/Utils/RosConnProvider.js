@@ -43,7 +43,9 @@ export const RosProvider = ({ children }) => {
             topicName == "/nature/global_path" ||
             topicName == "/nature/local_path" ||
             topicName == "/nature/occupancy_grid" ||
-            topicName == "/nature/odometry"
+            topicName == "/nature/odometry" ||
+            topicName == "/nature/state" ||
+            topicName == "/nature/waypoints"
           ) {
             const testTopic = new ROSLIB.Topic({
               ros: ros,
