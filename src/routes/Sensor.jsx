@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Card from "../Components/Card";
 import Camera from "../Components/Camera";
 import { RosProvider, useRos } from "../Utils/RosConnProvider";
+import PointCloud from "../Components/PointCloud";
 
 export default function Sensor() {
   const { isCon } = useRos();
@@ -9,14 +10,15 @@ export default function Sensor() {
   return (
     <div id="sensor-tab" className="body">
       {isCon ? <Camera/> : <Card />}
-      <div className="card">
+      {isCon ? <PointCloud/> : <div className="card">
         <h3 className="card-title"> Lidar </h3>
         <img
           className="sample-img"
           src="https://s3-prod.autonews.com/s3fs-public/Velodyne_Lidar_Alpha_Prime-01_i.jpg"
           alt="lidar"
         />
-      </div>
+      </div>}
+
       <div className="card">
         <h3 className="card-title"> Sensor Fusion </h3>
         <img
