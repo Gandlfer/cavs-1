@@ -38,13 +38,13 @@ export default function Map() {
           </Marker>
           <Polyline pathOption={{ color: "red" }} positions={polyline1} />
         </MapContainer> */}
-        <MapComponent/>
+        <MapComponent />
       </div>
       <div className="card">
         <h3 className="card-title"> Lidar </h3>
         <img
           className="sample-img"
-          src="https://s3-prod.autonews.com/s3fs-public/Velodyne_Lidar_Alpha_Prime-01_i.jpg"
+          src="https://cdn.discordapp.com/attachments/1281269784415309956/1301304999296503909/image.png?ex=6723fe38&is=6722acb8&hm=2581bbd0e2f7da664dd50e680d473d7216046b9fb4de029836d4b9d8f809669c&"
           alt="lidar"
         />
       </div>

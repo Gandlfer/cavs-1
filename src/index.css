@@ -60,7 +60,7 @@
   width: auto;
   min-width: 20vw;
   background-color: #acacac;
-  border: 3px solid rgb(255, 253, 253);
+  border: 1px solid rgb(0, 0, 0);
   border-radius: 10px;
   display: inline-flexbox;
   padding: 2px;
@@ -86,7 +86,10 @@
 .sample-img{
   border: 1px solid green;
   height: 350px;
+  max-width: 100%;
+  max-height: 100%;
   margin: 0;
+  object-fit: contain;
 }
 /* Navbar CSS */
 .navbar {
@@ -102,7 +105,6 @@
   top: 0;
   border-radius: 0 0 20% ;
 }
-
 .menu-bar {
   color: #000;
   display: flex;
@@ -160,7 +162,6 @@
   padding: 0 16px;
   border-radius: 10px;
 }
-
 .nav-text a:hover {
   background-color: #000000;
   color: #fff;
@@ -192,21 +193,19 @@
 }
 
 .controller {
-  width: 100%;
+  width: fit-content;
   height: auto;
-  aspect-ratio: 5 / 1;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   align-content: space-evenly;
   justify-content: center;
   position: absolute;
-  bottom: 1vh;
+  right: 10px;
 }
 .ctrl-button {
   border: 2px solid black;
   border-radius: 10px;
-  font-size: 3rem;
+  font-size: 2rem;
   padding: 2px;
   margin: 2%;
   display: flex;
@@ -226,6 +225,7 @@
   background-color: #acacac;
   height: 80vh;
   width: 20vw;
+  min-width: 350px;
   flex-grow: 1;
   margin: 10px;
   font-size: large;
@@ -251,7 +251,6 @@
   position: relative;
   width: 100%;
   height: 2em;
-
 }
 .topic-name{
   border-bottom: 1px solid white;
@@ -266,7 +265,7 @@
   border-bottom: 1px solid#fff;
   display: inline-flex;
   position: absolute;
-  width: 10%;
+  width: 25%;
   height: 100%;
   right: 0;
   top: 0;

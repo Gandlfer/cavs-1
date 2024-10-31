@@ -1,7 +1,7 @@
 import React from "react";
 import Card from "../Components/Card";
 import TopicPublishRate from "../Components/TopicPublishRate";
-import TopicData from "../Placeholder data files/TopicData";
+import TopicData from "../PlaceholderFiles/TopicData";
 import { useRos } from "../Utils/RosConnProvider";
 
 export default function Status() {
