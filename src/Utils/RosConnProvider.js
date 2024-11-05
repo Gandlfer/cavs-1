@@ -46,7 +46,8 @@ export const RosProvider = ({ children }) => {
             topicName == "/nature/odometry" ||
             topicName == "/nature/state" ||
             topicName == "/nature/waypoints" ||
-            topicName == "/nature/points"
+            topicName == "/nature/points" ||
+            topicName == "/mavs_ros/imu"
           ) {
             const testTopic = new ROSLIB.Topic({
               ros: ros,
@@ -61,12 +62,28 @@ export const RosProvider = ({ children }) => {
                 topicSubDataRef.current[topicName].pubRate = 0;
               } else {
                 //console.log("CalcPubRate" + topicName);
-                topicSubDataRef.current[topicName].pubRate = Math.ceil(
+
+                // console.log(
+                //   topicName +
+                //     " Time now " +
+                //     Date.now() +
+                //     "Prev time " +
+                //     topicSubDataRef.current[topicName].prevTime +
+                //     "time Diff " +
+                //     (Date.now() - topicSubDataRef.current[topicName].prevTime) /
+                //       1000
+                // );
+                let rate =
                   1 /
-                    ((Date.now() -
-                      topicSubDataRef.current[topicName].prevTime) /
-                      1000)
-                );
+                  ((Date.now() - topicSubDataRef.current[topicName].prevTime) /
+                    1000);
+
+                if (isFinite(rate)) {
+                  topicSubDataRef.current[topicName].pubRate = Math.ceil(rate);
+                } else {
+                  topicSubDataRef.current[topicName].pubRate = 0;
+                }
+
                 topicSubDataRef.current[topicName].prevTime = Date.now();
               }
               topicSubDataRef.current[topicName].message = message;
@@ -80,6 +97,7 @@ export const RosProvider = ({ children }) => {
     return () => {
       if (ros != null) {
         topicSubDataRef.current.keys().map((topicName, i) => {});
+        topicSubDataRef.current = {};
         ros.close();
       }
     };
