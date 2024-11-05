@@ -40,9 +40,9 @@ const MapComponent = () => {
       );
     }
     if (testTopicName in topicSubDataRef.current) {
-      console.log(
-        topicSubDataRef.current[testTopicName].message.pose.pose.position
-      );
+      // console.log(
+      //   topicSubDataRef.current[testTopicName].message.pose.pose.position
+      // );
       setCurrentPosition([
         topicSubDataRef.current[testTopicName].message.pose.pose.position.x,
         topicSubDataRef.current[testTopicName].message.pose.pose.position.y,
@@ -51,7 +51,7 @@ const MapComponent = () => {
   }, [ros, isCon, refresh]);
   return (
     <>
-      {console.log("Update")}
+      {/* {console.log("Update")} */}
       {isCon ? (
         <MapContainer
           center={[33.453892, -88.788887]}

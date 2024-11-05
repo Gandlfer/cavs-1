@@ -16,7 +16,7 @@ const TopicPublishRate = () => {
               >
                 {topic}
               </span>
-              {console.log(topicSubDataRef.current[topic].message)}
+              {/* {console.log(topicSubDataRef.current[topic].message)} */}
               <div
                 className="topic-color"
                 id={

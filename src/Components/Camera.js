@@ -33,7 +33,6 @@ const Camera = () => {
 
   return (
     <div className="card">
-      {console.log("refresh")}
       <p>{error.err ? null : "Publishing Rate: " + pubRate}</p>
       <canvas
         className="card-img"
