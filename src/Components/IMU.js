@@ -92,9 +92,9 @@ const IMU = () => {
     // Add yaw, pitch, roll arrows
     if (!yawArrowRef.current) {
       yawArrowRef.current = new THREE.ArrowHelper(
-        new THREE.Vector3(0, 0, 1),
+        new THREE.Vector3(1, 0, 0),
         new THREE.Vector3(0, 0, 0),
-        2,
+        1.5,
         0xff0000
       );
     }
@@ -108,9 +108,9 @@ const IMU = () => {
     }
     if (!rollArrowRef.current) {
       rollArrowRef.current = new THREE.ArrowHelper(
-        new THREE.Vector3(1, 0, 0),
+        new THREE.Vector3(0, 0, 1),
         new THREE.Vector3(0, 0, 0),
-        1.5,
+        2,
         0x0000ff
       );
     }
@@ -137,22 +137,25 @@ const IMU = () => {
   useEffect(() => {
     if (isCon && topicName in topicSubDataRef.current && vehicleRef.current) {
       console.log(topicSubDataRef.current[topicName].message);
-      const { x, y, z, w } =
-        topicSubDataRef.current[topicName].message.pose.pose.orientation; // Extract quaternion data from imuData
-      const quaternion = new THREE.Quaternion(x, y, z, w);
-      const euler = new THREE.Euler().setFromQuaternion(quaternion, "ZXY");
+      const { x, y, z } =
+        topicSubDataRef.current[topicName].message.twist.twist.angular; // Extract quaternion data from imuData
+      const quaternion = new THREE.Quaternion(x, y, z);
+      console.log(quaternion);
+      const euler = new THREE.Euler().setFromQuaternion(quaternion, "XYZ");
       const { x: pitch, y: yaw, z: roll } = euler;
-      vehicleRef.current.rotation.set(pitch, yaw, roll);
+      //console.log(euler);
+      //vehicleRef.current.rotation.set(pitch, yaw, roll);
+      vehicleRef.current.setRotationFromQuaternion(quaternion);
 
       // Update yaw, pitch, roll based on orientation
       yawArrowRef.current.setDirection(
-        new THREE.Vector3(0, 0, 1).applyQuaternion(quaternion)
+        new THREE.Vector3(1, 0, 0).applyQuaternion(quaternion)
       );
       pitchArrowRef.current.setDirection(
         new THREE.Vector3(0, 1, 0).applyQuaternion(quaternion)
       );
       rollArrowRef.current.setDirection(
-        new THREE.Vector3(1, 0, 0).applyQuaternion(quaternion)
+        new THREE.Vector3(0, 0, 1).applyQuaternion(quaternion)
       );
     }
   }, [[ros, isCon, refresh]]);
