@@ -5,6 +5,7 @@ import "./index.css";
 import Map from "./routes/Map";
 import Sensor from "./routes/Sensor";
 import Status from "./routes/Status";
+import Config from "./routes/Config";
 import Navbar from "./Components/Navbar";
 import Header from "./Components/Header";
 import { RosProvider } from "./Utils/RosConnProvider";
@@ -38,17 +39,20 @@ const router = createBrowserRouter([
         path: "status",
         element: <Status />,
       },
+      {
+        path: "config",
+        element: <Config />,
+      },
     ],
   },
 ]);
-export const Router = ()=>{
-  return(
+export const Router = () => {
+  return (
     <RosProvider>
       <RouterProvider router={router} />
     </RosProvider>
-    
-  )
-}
+  );
+};
 //entry point
 // ReactDOM.createRoot(document.getElementById("root")).render(
 //   <React.StrictMode>

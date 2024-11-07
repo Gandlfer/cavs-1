@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import * as Io5 from "react-icons/io5";
+import * as Gr from "react-icons/gr";
 import { NavLink, Link, useLocation } from "react-router-dom";
 import { SidebarData } from "./SidebarData";
 import "../index.css";
@@ -28,7 +29,7 @@ export default function Navbar() {
           <ul className="nav-menu-items">
             <li className="navbar-toggle" onClick={showSidebar}>
               <Link to="#" className="close-tab">
-                <Io5.IoCloseCircleOutline />
+                <Io5.IoChevronBackOutline />
               </Link>
             </li>
             <li
@@ -67,12 +68,24 @@ export default function Navbar() {
                 <span id="nav-span">Status</span>
               </Link>
             </li>
+            <li
+              className={
+                splitLocation[1] === "config" ? "nav-text active" : "nav-text"
+              }
+            >
+              <Link to="/config">
+                <span id="nav-span">
+                  <Gr.GrDocumentConfig />
+                </span>
+                <span id="nav-span">Config</span>
+              </Link>
+            </li>
           </ul>
           <div className="navbar-controller">
             {/* <button className="ctrl-button" >
               <Io5.IoPlay onClick={buttonPress}/>
             </button> */}
-            <ControllerButton/>
+            <ControllerButton />
             <button className="ctrl-button">
               <Io5.IoPause />
             </button>
