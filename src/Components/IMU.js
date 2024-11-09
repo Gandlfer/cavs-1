@@ -38,7 +38,6 @@ const IMU = () => {
     sceneRef.current.add(axesHelper);
     // Create the vehicle parts
     if (!vehicleRef.current) {
-      console.log("here");
       const vehicle = new THREE.Group();
 
       // Body - narrower width, greater length
@@ -76,7 +75,7 @@ const IMU = () => {
       sceneRef.current.add(vehicle);
       vehicleRef.current = vehicle;
 
-      console.log("Here");
+      //console.log("Here");
       // Orbit Controls setup
       if (!controlsRef.current) {
         controlsRef.current = new OrbitControls(
@@ -136,11 +135,11 @@ const IMU = () => {
   }, []);
   useEffect(() => {
     if (isCon && topicName in topicSubDataRef.current && vehicleRef.current) {
-      console.log(topicSubDataRef.current[topicName].message);
+      //console.log(topicSubDataRef.current[topicName].message);
       const { x, y, z } =
         topicSubDataRef.current[topicName].message.twist.twist.angular; // Extract quaternion data from imuData
       const quaternion = new THREE.Quaternion(x, y, z);
-      console.log(quaternion);
+      //console.log(quaternion);
       const euler = new THREE.Euler().setFromQuaternion(quaternion, "XYZ");
       const { x: pitch, y: yaw, z: roll } = euler;
       //console.log(euler);
