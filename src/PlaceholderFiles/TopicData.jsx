@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const TopicData = [
+const [topicData, setTopics] = useState([
   {
     title: "Topic 1",
     status: 1,
@@ -101,6 +101,6 @@ const TopicData = [
     status: 0,
     cName: "topic",
   },
-];
+]);
 
 export default TopicData;

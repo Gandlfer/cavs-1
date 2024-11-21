@@ -251,7 +251,8 @@
   position: absolute;
   display: inline-block;
   margin: 2%;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .topic {
