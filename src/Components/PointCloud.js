@@ -9,6 +9,7 @@ const PointCloud = () => {
   const { ros, isCon, refresh, topicSubDataRef } = useRos();
   const [exist, setExist] = useState(false);
   const topicName = "/nature/points";
+  const odometryTopic = "/nature/odometry";
   const mountRef = useRef(null);
   const sceneRef = useRef(new THREE.Scene());
   const cameraRef = useRef(
@@ -62,12 +63,13 @@ const PointCloud = () => {
   //Pulling data from subscription
   useEffect(() => {
     if (topicName in topicSubDataRef.current && isCon) {
-      console.log(topicSubDataRef.current[topicName].message);
       const geometry = new THREE.BufferGeometry();
       const vertices = [];
       const colors = [];
 
-      parsePC2Data(topicSubDataRef.current[topicName].message).forEach(
+      const vehicleLocation = findVehicleLocation(topicSubDataRef.current[odometryTopic].message)
+
+      parsePC2Data(topicSubDataRef.current[topicName].message, vehicleLocation).forEach(
         (point) => {
           const { position, color } = point;
           vertices.push(position.x, position.y, position.z);
@@ -75,8 +77,6 @@ const PointCloud = () => {
           colors.push(color.r, color.g, color.b);
         }
       );
-      // console.log(vertices);
-      // console.log(colors);
       geometry.setAttribute(
         "position",
         new THREE.Float32BufferAttribute(vertices, 3)
@@ -108,11 +108,11 @@ const PointCloud = () => {
 };
 
 
-function parsePC2Data(message) {
-const points = []; //Should contain a xyz location & color
+function parsePC2Data(message, vehicleLocation) {
+const points = []; 
 const convertData = base64ToUint8Array(message.data);
-const dataView = new DataView(convertData.buffer); //Shove into a Dataview so that we can handle different data types
-const { height, width, point_step, row_step, fields } = message; //Not sure we needs all of this - legacy
+const dataView = new DataView(convertData.buffer); //Shove into a Dataview so that we can handle different data types in the future
+const { height, width, point_step, fields } = message; 
 
 //Cannot necicarily assume that all things follow the same offset pattern
 const xOffset = fields.find(f => f.name === 'x').offset;
@@ -131,65 +131,24 @@ for (let i = 0; i < height * width; i++)
   const zData = dataView.getFloat32(startingIndex + zOffset, true)
   const intensity = dataView.getFloat32(startingIndex + intenOffset, true)
 
-  //Turn intensity into a color | Using code from old method
+  //Turn intensity into a color
   const normalizedIntensity = (intensity || 0) / 255;
   const color = new THREE.Color();
   color.setHSL(normalizedIntensity, 1.0, 0.5); // Adjust hue based on intensity
 
-
   points.push({
-    position: { x: xData, y: yData, z: zData },
+    position: { x: xData - vehicleLocation.x, y: yData - vehicleLocation.y, z: zData },
     color: { r: color.r, g: color.g, b: color.b },
   });
 }
-console.log(points);
 return points;
 }
 
-
-
-//Current PC2 handler by D.
-function parsePointCloud2Data(message) {
-  const { height, width, point_step, row_step, data, fields } = message;
-  console.log(height, width, point_step, row_step, fields);
-  const points = [];
-  const convertData = base64ToUint8Array(data);
-  //console.log(convertData);
-  for (let row = 0; row < height; row++) {
-    for (let col = 0; col < width; col++) {
-      const pointIndex = row * row_step + col * point_step;
-      const point = {};
-
-      fields.forEach((field) => {
-        const { name, offset, datatype } = field;
-        const byteOffset = pointIndex + offset;
-        // Conversion based on datatype
-        if (datatype === 7) {
-          // Assuming 7 is float32 (x, y, z)
-          point[name] = new Float32Array(
-            convertData.slice(byteOffset, byteOffset + 4)
-          )[0];
-          //console.log(point[name]);
-        }
-        // Add other datatype conversions if needed
-      });
-      //console.log(point);
-      // Normalize intensity to [0, 1] for color mapping
-      const normalizedIntensity = (point.intensity || 0) / 255;
-      const color = new THREE.Color();
-      color.setHSL(normalizedIntensity, 1.0, 0.5); // Adjust hue based on intensity
-      //console.log(point);
-      points.push({
-        position: { x: point.x, y: point.y, z: point.z },
-        color: { r: color.r, g: color.g, b: color.b },
-      });
-      //console.log(points);
-    }
-  }
-  return points;
+function findVehicleLocation(odomMessage) {
+  const x = odomMessage.pose.pose.position.x;
+  const y = odomMessage.pose.pose.position.y;
+  return {x: x, y: y};
 }
-
-
 
 function base64ToUint8Array(base64) {
   var raw = atob(base64);
