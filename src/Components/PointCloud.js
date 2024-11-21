@@ -58,6 +58,8 @@ const PointCloud = () => {
     };
     animate();
   }, []);
+
+  //Pulling data from subscription
   useEffect(() => {
     if (topicName in topicSubDataRef.current && isCon) {
       console.log(topicSubDataRef.current[topicName].message);
@@ -65,7 +67,7 @@ const PointCloud = () => {
       const vertices = [];
       const colors = [];
 
-      parsePointCloud2Data(topicSubDataRef.current[topicName].message).forEach(
+      parsePC2Data(topicSubDataRef.current[topicName].message).forEach(
         (point) => {
           const { position, color } = point;
           vertices.push(position.x, position.y, position.z);
@@ -104,8 +106,52 @@ const PointCloud = () => {
     </div>
   );
 };
+
+
+function parsePC2Data(message) {
+const points = []; //Should contain a xyz location & color
+const convertData = base64ToUint8Array(message.data);
+const dataView = new DataView(convertData.buffer); //Shove into a Dataview so that we can handle different data types
+const { height, width, point_step, row_step, fields } = message; //Not sure we needs all of this - legacy
+
+//Cannot necicarily assume that all things follow the same offset pattern
+const xOffset = fields.find(f => f.name === 'x').offset;
+const yOffset = fields.find(f => f.name === 'y').offset;
+const zOffset = fields.find(f => f.name === 'z').offset;
+const intenOffset = fields.find(f => f.name === 'intensity').offset;
+
+//There are width * height points
+for (let i = 0; i < height * width; i++)
+{
+  const startingIndex = i * point_step; //Where we start to read
+  //Assuming type = 7 this should be revised to another function that actually handles things based upon type value and endian flag.
+  //TODO: Make alt fucntionality paths if type is not 7
+  const xData = dataView.getFloat32(startingIndex + xOffset, true) //datatyep = 7 & is_bigendian = false
+  const yData = dataView.getFloat32(startingIndex + yOffset, true)
+  const zData = dataView.getFloat32(startingIndex + zOffset, true)
+  const intensity = dataView.getFloat32(startingIndex + intenOffset, true)
+
+  //Turn intensity into a color | Using code from old method
+  const normalizedIntensity = (intensity || 0) / 255;
+  const color = new THREE.Color();
+  color.setHSL(normalizedIntensity, 1.0, 0.5); // Adjust hue based on intensity
+
+
+  points.push({
+    position: { x: xData, y: yData, z: zData },
+    color: { r: color.r, g: color.g, b: color.b },
+  });
+}
+console.log(points);
+return points;
+}
+
+
+
+//Current PC2 handler by D.
 function parsePointCloud2Data(message) {
   const { height, width, point_step, row_step, data, fields } = message;
+  console.log(height, width, point_step, row_step, fields);
   const points = [];
   const convertData = base64ToUint8Array(data);
   //console.log(convertData);
@@ -140,9 +186,11 @@ function parsePointCloud2Data(message) {
       //console.log(points);
     }
   }
-  //console.log(points);
   return points;
 }
+
+
+
 function base64ToUint8Array(base64) {
   var raw = atob(base64);
   var uint8Array = new Uint8Array(raw.length);
