@@ -247,7 +247,7 @@
   position: relative;
 }
 .topic-list{
-  width: 92%;
+  width: 95%;
   height: 90%;
   position: absolute;
   display: inline-block;
@@ -306,7 +306,6 @@
   overflow-x: hidden;
 }
 #server-box {
-  border: 1px solid green;
   height: 3rem;
   max-width: 60%;
   min-width: 20%;
@@ -324,6 +323,25 @@
   position: absolute;
   bottom: 2%;
   right: 2%;
+}
+
+.config-components{
+  width: 96%;
+  height: 80%;
+  position: absolute;
+  display: inline-block;
+  margin: 2%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+#config-available {
+  width: 96%;
+  height: 88%;
+  position: absolute;
+  display: inline-block;
+  margin: 2%;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 #light{
   background: rgb(255, 255, 255);

@@ -16,21 +16,23 @@ export default function Config() {
       </div>
       <div className="status-card">
         <h3 className="card-title">Components</h3>
-        <ul>
-          {ConfigData.map((val, key) => {
-            return (
-              <li key={key} className="topic">
-                <span className="topic-name" id={"light"}>
-                  {val.name}
-                </span>
-                <input className="topic-path" defaultValue={val.path} />
-              </li>
-            );
-          })}
-        </ul>
+        <div className="config-components">
+          <ul>
+            {ConfigData.map((val, key) => {
+              return (
+                <li key={key} className="topic">
+                  <span className="topic-name" id={"light"}>
+                    {val.name}
+                  </span>
+                  <input className="topic-path" defaultValue={val.path} />
+                </li>
+              );
+            })}
+          </ul>
+        </div>
         <button id="save-config">Save</button>
       </div>
-      <ConfigTopicAvailable/>
+      <ConfigTopicAvailable />
     </div>
   );
 }
