@@ -94,34 +94,24 @@ const PointCloud = () => {
   }, []);
 
   //New animation loop
-  // Animation Loop
   useEffect(() => {
     let animationFrameId;
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
-      if (controlsRef.current) controlsRef.current.update();
+      if (controlsRef.current) {
+        controlsRef.current.update();
+      }
       if (rendererRef.current)
         rendererRef.current.render(sceneRef.current, cameraRef.current);
     };
     animate();
 
+    //Cleanup old frames
     return () => {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
   }, []);
-
-
-  // useEffect(() => {
-  //   const animate = () => {
-  //     requestAnimationFrame(animate);
-  //     if (controlsRef.current) {
-  //       controlsRef.current.update(); // Update controls
-  //     }
-  //     rendererRef.current.render(sceneRef.current, cameraRef.current);
-  //   };
-  //   animate();
-  // }, []);
 
   //Pulling data from subscription
   useEffect(() => {
