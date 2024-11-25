@@ -10,6 +10,7 @@ const PointCloud = () => {
   const [exist, setExist] = useState(false);
   const topicName = "/nature/points";
   const odometryTopic = "/nature/odometry";
+
   const mountRef = useRef(null);
   const sceneRef = useRef(new THREE.Scene());
   const cameraRef = useRef(
@@ -20,17 +21,29 @@ const PointCloud = () => {
       1000
     )
   );
-  const rendererRef = useRef(new THREE.WebGLRenderer({ antialias: true }));
+
+
+  const rendererRef = useRef(null); // was new THREE.WebGLRenderer({ antialias: true })
   const pointCloudRef = useRef();
   const controlsRef = useRef(null);
 
+  //Setup for Refs
   useEffect(() => {
-    rendererRef.current.setSize(window.innerWidth, window.innerHeight);
-    mountRef.current.appendChild(rendererRef.current.domElement);
+    const mount = mountRef.current;
+
+    //Only create a renderer if we do not currently have one.
+    if(!rendererRef.current){
+      rendererRef.current = new THREE.WebGLRenderer({ antialias: true });
+      rendererRef.current.setSize(window.innerWidth, window.innerHeight);
+      mountRef.current.appendChild(rendererRef.current.domElement);
+    }
+
+    //Camera things
     cameraRef.current.position.set(0, 0, 500); // Move the camera to ensure the axes are visible
     cameraRef.current.lookAt(0, 0, 0);
+
     // Add Axes Helper to show x, y, z directions at origin
-    const axesHelper = new THREE.AxesHelper(50); // Adjust size as needed
+    const axesHelper = new THREE.AxesHelper(50);
     sceneRef.current.add(axesHelper);
 
     // Add ambient light for visibility
@@ -45,20 +58,70 @@ const PointCloud = () => {
       );
       controlsRef.current.enableDamping = true; // Smooth transitions
       controlsRef.current.dampingFactor = 0.25;
-      controlsRef.current.screenSpacePanning = true; // Disable panning along the screen
+      controlsRef.current.screenSpacePanning = true; // Is this needed?
     }
+
+    //Disposal
+    return () => {
+      // Cleanup when component unmounts
+      if (rendererRef.current) {
+        rendererRef.current.dispose(); // Dispose renderer
+        if (rendererRef.current.domElement)
+          mount.removeChild(rendererRef.current.domElement);
+        rendererRef.current = null;
+      }
+
+      // Dispose controls
+      if (controlsRef.current) {
+        controlsRef.current.dispose();
+        controlsRef.current = null;
+      }
+
+      // Dispose scene resources
+      const scene = sceneRef.current;
+      scene.traverse((object) => {
+        if (object.geometry) object.geometry.dispose();
+        if (object.material) {
+          if (Array.isArray(object.material)) {
+            object.material.forEach((mat) => mat.dispose());
+          } else {
+            object.material.dispose();
+          }
+        }
+      });
+      sceneRef.current = null;
+    };
   }, []);
 
+  //New animation loop
+  // Animation Loop
   useEffect(() => {
+    let animationFrameId;
+
     const animate = () => {
-      requestAnimationFrame(animate);
-      if (controlsRef.current) {
-        controlsRef.current.update(); // Update controls
-      }
-      rendererRef.current.render(sceneRef.current, cameraRef.current);
+      animationFrameId = requestAnimationFrame(animate);
+      if (controlsRef.current) controlsRef.current.update();
+      if (rendererRef.current)
+        rendererRef.current.render(sceneRef.current, cameraRef.current);
     };
     animate();
+
+    return () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
   }, []);
+
+
+  // useEffect(() => {
+  //   const animate = () => {
+  //     requestAnimationFrame(animate);
+  //     if (controlsRef.current) {
+  //       controlsRef.current.update(); // Update controls
+  //     }
+  //     rendererRef.current.render(sceneRef.current, cameraRef.current);
+  //   };
+  //   animate();
+  // }, []);
 
   //Pulling data from subscription
   useEffect(() => {
