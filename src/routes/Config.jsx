@@ -1,5 +1,6 @@
 import React from "react";
 import ConfigData from "../PlaceholderFiles/ConfigData";
+import ConfigTopicAvailable from "../Components/ConfigTopicAvailable";
 
 export default function Config() {
   return (
@@ -29,20 +30,7 @@ export default function Config() {
         </ul>
         <button id="save-config">Save</button>
       </div>
-      <div className="status-card">
-        <h3 className="card-title">Topics Available</h3>
-        <ul>
-          {ConfigData.map((val, key) => {
-            return (
-              <li key={key} className="topic">
-                <span className="topic-name" id={"light"}>
-                  {val.path}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      <ConfigTopicAvailable/>
     </div>
   );
 }
