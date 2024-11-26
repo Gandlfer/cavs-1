@@ -26,7 +26,6 @@ export const RosProvider = ({ children }) => {
 
   const setAvailableTopics = () => {
     ros.getTopics((result) => {
-      availableTopics.current = result.topics;
       setAvailableTopicsRefresh(result.topics);
     });
   };
