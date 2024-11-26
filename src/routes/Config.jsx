@@ -3,9 +3,12 @@ import ConfigData from "../PlaceholderFiles/ConfigData";
 import ConfigTopicAvailable from "../Components/ConfigTopicAvailable";
 import { useRos } from "../Utils/RosConnProvider";
 import * as Io5 from "react-icons/io5";
+import { Slide, ToastContainer, toast } from "react-toastify";
+import "react-toastify/ReactToastify.css";
 
 export default function Config() {
   const { defaultURLRef } = useRos();
+  const notify = () => toast.success("Path Saved");
   return (
     <div id="config-container" className="body">
       <div id="server-box" className="status-card">
@@ -18,9 +21,26 @@ export default function Config() {
           label="Server Address"
           defaultValue={"ws://" + defaultURLRef.current}
         />
-        <button id="save-server-button" className="ctrl-button">
+        <button
+          id="save-server-button"
+          className="ctrl-button"
+          onClick={notify}
+        >
           <Io5.IoSaveOutline />
         </button>
+        <ToastContainer
+          position="top-center"
+          autoClose={1000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Slide}
+        />
       </div>
       <div className="status-card">
         <h3 className="card-title">Components</h3>
@@ -38,7 +58,9 @@ export default function Config() {
             })}
           </ul>
         </div>
-        <button id="save-config">Save</button>
+        <button id="save-config" onClick={notify}>
+          Save
+        </button>
       </div>
       <ConfigTopicAvailable />
     </div>

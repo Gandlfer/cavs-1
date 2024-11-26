@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useRos } from "../Utils/RosConnProvider.js";
 import * as Io5 from "react-icons/io5";
 import ROSLIB from "roslib";
+import { Slide, ToastContainer, toast } from "react-toastify";
+import "react-toastify/ReactToastify.css";
 
 const ControllerButton = () => {
   const { ros, isCon, refresh, topicSubDataRef } = useRos();
@@ -17,8 +19,10 @@ const ControllerButton = () => {
       rosParam.get((value) => {
         console.log(value);
       });
+      toast.success("Playing");
     } else {
       console.log("Data not ready");
+      toast.error("Data is not ready");
     }
   };
   useEffect(() => {
@@ -33,9 +37,24 @@ const ControllerButton = () => {
   }, [ros, isCon, refresh]);
 
   return (
-    <button className="ctrl-button">
-      <Io5.IoPlay onClick={buttonHandler} />
-    </button>
+    <div>
+      <button className="ctrl-button">
+        <Io5.IoPlay onClick={buttonHandler} />
+      </button>
+      <ToastContainer
+          position="top-center"
+          autoClose={1000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Slide}
+        />
+    </div>
   );
 };
 

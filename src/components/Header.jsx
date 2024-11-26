@@ -5,6 +5,8 @@ import TestComponent from "./TestComponent";
 import ControllerButton from "./ControllerButtons";
 import { useRos } from "../Utils/RosConnProvider";
 import ROSLIB from "roslib";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 
 export default function Header() {
   const { ros, isCon, refresh } = useRos();
@@ -18,6 +20,22 @@ export default function Header() {
       console.log(value);
     });
   };
+  const submit = () => {
+    confirmAlert({
+      title: "Confirm exit",
+      message: "Are you sure to exit?",
+      buttons: [
+        {
+          label: "No",
+          //onClick: () => alert("Click No"),
+        },
+        {
+          label: "EXIT",
+          //onClick: () => alert("Exiting"),
+        },
+      ],
+    });
+  };
   return (
     <header className="header">
       <h1>CAVS</h1>
@@ -29,7 +47,7 @@ export default function Header() {
         <button className="ctrl-button">
           <Io5.IoPause />
         </button> */}
-        <button className="ctrl-button">
+        <button className="ctrl-button" onClick={submit}>
           <Io5.IoPower />
         </button>
       </div>
