@@ -17,7 +17,6 @@ const ConfigTopicAvailable = () => {
               return (
                 <li key={element} className="topic">
                   <span className="topic-name" id={"light"}>
-                    {console.log(element)}
                     {element}
                   </span>
                 </li>
