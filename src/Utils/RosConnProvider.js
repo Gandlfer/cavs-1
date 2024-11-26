@@ -1,5 +1,6 @@
 import { useState, createContext, useContext, useEffect, useRef } from "react";
 import ROSLIB from "roslib";
+import DefaultServerUrl from "../PlaceholderFiles/ConfigData.jsx";
 
 const RosContext = createContext();
 
@@ -13,27 +14,34 @@ export const RosProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [ros, setRos] = useState(null);
   const topicSubDataRef = useRef({});
+  const subcribedTopics = useRef({});
+  const defaultURLRef = useRef("localhost:9090");
   const [refresh, setRefresh] = useState(false);
+  const [availableTopicsRefresh, setAvailableTopicsRefresh] = useState([]);
   let temp = useRef(false);
   const [load, setLoad] = useState(true);
   let rosConn;
-  let topicList = [
-    "/mavs_ros/image",
-    "/nature/global_path",
-    "/nature/local_path",
-    "/nature/occupancy_grid",
-  ];
+
+  const setSubscribedTopics = (data) => {};
+
+  const setAvailableTopics = () => {
+    ros.getTopics((result) => {
+      setAvailableTopicsRefresh(result.topics);
+    });
+  };
+
   useEffect(() => {
     function connection() {
       setLoading(true);
       rosConn = new ROSLIB.Ros({
-        url: "ws://localhost:9090",
+        url: "ws://" + defaultURLRef.current,
       });
       setRos(rosConn);
       setLoading(false);
     }
     connection();
   }, []);
+
   useEffect(() => {
     if (ros) {
       ros.getTopics((result) => {
@@ -61,18 +69,6 @@ export const RosProvider = ({ children }) => {
                 topicSubDataRef.current[topicName].prevTime = Date.now();
                 topicSubDataRef.current[topicName].pubRate = 0;
               } else {
-                //console.log("CalcPubRate" + topicName);
-
-                // console.log(
-                //   topicName +
-                //     " Time now " +
-                //     Date.now() +
-                //     "Prev time " +
-                //     topicSubDataRef.current[topicName].prevTime +
-                //     "time Diff " +
-                //     (Date.now() - topicSubDataRef.current[topicName].prevTime) /
-                //       1000
-                // );
                 let rate =
                   1 /
                   ((Date.now() - topicSubDataRef.current[topicName].prevTime) /
@@ -110,6 +106,7 @@ export const RosProvider = ({ children }) => {
     ros.on("connection", function () {
       console.log("Connection made!");
       setIsCon(true);
+      setAvailableTopics();
       //console.log(ros);
     });
     ros.on("close", () => {
@@ -118,7 +115,17 @@ export const RosProvider = ({ children }) => {
     });
   }
   return (
-    <RosContext.Provider value={{ ros, isCon, topicSubDataRef, refresh }}>
+    <RosContext.Provider
+      value={{
+        defaultURLRef,
+        ros,
+        isCon,
+        topicSubDataRef,
+        refresh,
+        subcribedTopics,
+        availableTopicsRefresh,
+      }}
+    >
       {children}
     </RosContext.Provider>
   );

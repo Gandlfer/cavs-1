@@ -1,9 +1,11 @@
 import React from "react";
 import ConfigData from "../PlaceholderFiles/ConfigData";
 import ConfigTopicAvailable from "../Components/ConfigTopicAvailable";
+import { useRos } from "../Utils/RosConnProvider";
 import * as Io5 from "react-icons/io5";
 
 export default function Config() {
+  const { defaultURLRef } = useRos();
   return (
     <div id="config-container" className="body">
       <div id="server-box" className="status-card">
@@ -14,7 +16,7 @@ export default function Config() {
           id="server-path"
           className="topic-path"
           label="Server Address"
-          defaultValue={"Server path"}
+          defaultValue={"ws://" + defaultURLRef.current}
         />
         <button id="save-server-button" className="ctrl-button">
           <Io5.IoSaveOutline />

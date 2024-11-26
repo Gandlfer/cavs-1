@@ -2,130 +2,45 @@ import React, { useState } from "react";
 
 const ConfigData = [
   {
-    name: "Topic 1",
-    path: "path1",
+    name: "Camera 1",
+    path: "/mavs_ros/image",
     cName: "topic",
   },
   {
-    name: "Topic 2",
-    path: "path2",
+    name: "Global Path",
+    path: "/nature/global_path",
     cName: "topic",
   },
   {
-    name: "Topic 3",
-    path: "path3",
+    name: "Local Path",
+    path: "/nature/local_path",
     cName: "topic",
   },
   {
-    name: "Topic 4",
-    path: "path4",
+    name: "Occupancy Grid",
+    path: "/nature/occupancy_grid",
     cName: "topic",
   },
   {
-    name: "Topic 5",
-    path: "path5",
+    name: "Odometry",
+    path: "/nature/odometry",
     cName: "topic",
   },
   {
-    name: "Topic 5",
-    path: "path5",
+    name: "IMU",
+    path: "/mavs_ros/imu",
     cName: "topic",
   },
   {
-    name: "Topic 5",
-    path: "path5",
+    name: "Point Cloud",
+    path: "/nature/points",
     cName: "topic",
   },
   {
-    name: "Topic 5",
-    path: "path5",
+    name: "Waypoint",
+    path: "/nature/waypoints",
     cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
-  {
-    name: "Topic 5",
-    path: "path5",
-    cName: "topic",
-  },
+  }
 ];
 
 export default ConfigData;
