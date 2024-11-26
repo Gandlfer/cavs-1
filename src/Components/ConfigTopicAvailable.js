@@ -4,20 +4,16 @@ import { useRos } from "../Utils/RosConnProvider.js";
 import ConfigData from "../PlaceholderFiles/ConfigData.jsx";
 
 const ConfigTopicAvailable = () => {
-  const { ros, isCon, availableTopics } = useRos();
-  const topicsRef = useRef();
+  const { ros, isCon, availableTopicsRefresh } = useRos();
 
-  useEffect(() => {
-    if (isCon) {
-    }
-  }, [ros, isCon]);
+  useEffect(() => {}, [ros]);
 
   return (
     <div className="status-card" id="config-available-card">
       <h3 className="card-title">Topics Available</h3>
       <ul id="config-available">
-        {isCon && availableTopics.current
-          ? availableTopics.current.map((element) => {
+        {isCon && availableTopicsRefresh.length > 0
+          ? availableTopicsRefresh.map((element) => {
               return (
                 <li key={element} className="topic">
                   <span className="topic-name" id={"light"}>

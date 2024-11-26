@@ -1,5 +1,6 @@
 import { useState, createContext, useContext, useEffect, useRef } from "react";
 import ROSLIB from "roslib";
+import DefaultServerUrl from "../PlaceholderFiles/ConfigData.jsx";
 
 const RosContext = createContext();
 
@@ -14,8 +15,9 @@ export const RosProvider = ({ children }) => {
   const [ros, setRos] = useState(null);
   const topicSubDataRef = useRef({});
   const subcribedTopics = useRef({});
-  const availableTopics = useRef([]);
+  const defaultURLRef = useRef("localhost:9090");
   const [refresh, setRefresh] = useState(false);
+  const [availableTopicsRefresh, setAvailableTopicsRefresh] = useState([]);
   let temp = useRef(false);
   const [load, setLoad] = useState(true);
   let rosConn;
@@ -25,6 +27,7 @@ export const RosProvider = ({ children }) => {
   const setAvailableTopics = () => {
     ros.getTopics((result) => {
       availableTopics.current = result.topics;
+      setAvailableTopicsRefresh(result.topics);
     });
   };
 
@@ -32,7 +35,7 @@ export const RosProvider = ({ children }) => {
     function connection() {
       setLoading(true);
       rosConn = new ROSLIB.Ros({
-        url: "ws://localhost:9090",
+        url: "ws://" + defaultURLRef.current,
       });
       setRos(rosConn);
       setLoading(false);
@@ -115,12 +118,13 @@ export const RosProvider = ({ children }) => {
   return (
     <RosContext.Provider
       value={{
+        defaultURLRef,
         ros,
         isCon,
         topicSubDataRef,
         refresh,
         subcribedTopics,
-        availableTopics,
+        availableTopicsRefresh,
       }}
     >
       {children}
