@@ -16,10 +16,8 @@ const IMU = () => {
       1000
     )
   );
-  const rendererRef = useRef(new THREE.WebGLRenderer({ antialias: true }));
+  const rendererRef = useRef(null);
   const vehicleRef = useRef(null);
-  const linearVelocityArrowRef = useRef(null);
-  const angularVelocityArrowRef = useRef(null);
   const yawArrowRef = useRef(null);
   const pitchArrowRef = useRef(null);
   const rollArrowRef = useRef(null);
@@ -27,15 +25,24 @@ const IMU = () => {
 
   const topicName = "/nature/odometry";
   const [data, setData] = useState(0);
+
+
   useEffect(() => {
-    //console.log(topicSubDataRef.current[topicName]);
-    rendererRef.current.setSize(window.innerWidth, window.innerHeight);
-    mountRef.current.appendChild(rendererRef.current.domElement);
+    const mount = mountRef.current;
+
+    //Only create a renderer if we do not currently have one
+    if(!rendererRef.current){
+      rendererRef.current = new THREE.WebGLRenderer({ antialias: true });
+      rendererRef.current.setSize(window.innerWidth, window.innerHeight);
+      mountRef.current.appendChild(rendererRef.current.domElement);
+    }
+    
     cameraRef.current.position.set(5, 5, 10); // Move the camera to ensure the axes are visible
     cameraRef.current.lookAt(0, 0, 0);
     // Add Axes Helper to show x, y, z directions at origin
     const axesHelper = new THREE.AxesHelper(15); // Adjust size as needed
     sceneRef.current.add(axesHelper);
+
     // Create the vehicle parts
     if (!vehicleRef.current) {
       const vehicle = new THREE.Group();
@@ -97,6 +104,8 @@ const IMU = () => {
         0xff0000
       );
     }
+
+    //Arrows
     if (!pitchArrowRef.current) {
       pitchArrowRef.current = new THREE.ArrowHelper(
         new THREE.Vector3(0, 1, 0),
@@ -113,33 +122,88 @@ const IMU = () => {
         0x0000ff
       );
     }
+
+    //Add the arrows 
     vehicleRef.current.add(yawArrowRef.current);
     vehicleRef.current.add(pitchArrowRef.current);
     vehicleRef.current.add(rollArrowRef.current);
 
-    // Clean up on component unmount
-    // return () => {
-    //   mountRef.current.removeChild(rendererRef.current.domElement);
-    //   rendererRef.current.dispose();
-    // };
-  }, []);
-  useEffect(() => {
-    const animate = () => {
-      requestAnimationFrame(animate);
-      if (controlsRef.current) {
-        controlsRef.current.update(); // Update controls
+    //Disposal / cleanup
+    return () => {
+      //Dispose the renderer
+      if(rendererRef.current){
+        rendererRef.current.dispose();
+        if(rendererRef.current.domElement)
+        {
+          mount.removeChild(rendererRef.current.domElement);
+        }
+        rendererRef.current = null;
       }
-      rendererRef.current.render(sceneRef.current, cameraRef.current);
+
+      //Dispose the controls
+      if (controlsRef.current) {
+        controlsRef.current.dispose();
+        controlsRef.current = null;
+      }
+
+      //Dispose Scene Resources (maybe)
+      sceneRef.current.traverse((object) => {
+        if (object.geometry) object.geometry.dispose();
+        if (object.material) {
+          if (Array.isArray(object.material)) {
+            object.material.forEach((mat) => mat.dispose());
+          } else {
+            object.material.dispose();
+          }
+        }
+      });
+
+      //Dispose Axes Helper from scene
+      sceneRef.current.remove(axesHelper);
+      if (axesHelper.geometry){
+        axesHelper.geometry.dispose();
+      }
+
+      //Dispose the vehicle from scene
+      if (vehicleRef.current) {
+        sceneRef.current.remove(vehicleRef.current);
+        vehicleRef.current = null;
+      }
+
+      //Nullify the arrows
+      if (yawArrowRef.current){
+        yawArrowRef.current = null;
+      }
+      if (pitchArrowRef.current){
+        pitchArrowRef.current = null;
+      }
+      if (rollArrowRef.current){
+        rollArrowRef.current = null;
+      }
+    }
+  }, []);
+
+  //Animation
+  useEffect(() => {
+    let animationFrameId;
+    const animate = () => {
+      animationFrameId = requestAnimationFrame(animate);
+      if(controlsRef.current){
+        controlsRef.current.update();
+      }
+      if(rendererRef.current){
+        rendererRef.current.render(sceneRef.current, cameraRef.current);
+      }
     };
     animate();
   }, []);
+
+
   useEffect(() => {
     if (isCon && topicName in topicSubDataRef.current && vehicleRef.current) {
-      //console.log(topicSubDataRef.current[topicName].message);
       const { x, y, z } =
         topicSubDataRef.current[topicName].message.twist.twist.angular; // Extract quaternion data from imuData
       const quaternion = new THREE.Quaternion(x, y, z);
-      //console.log(quaternion);
       const euler = new THREE.Euler().setFromQuaternion(quaternion, "XYZ");
       const { x: pitch, y: yaw, z: roll } = euler;
       //console.log(euler);
@@ -158,6 +222,7 @@ const IMU = () => {
       );
     }
   }, [[ros, isCon, refresh]]);
+
   return (
     <div className="card" id="IMU-card">
       <h3 className="card-title"> IMU </h3>

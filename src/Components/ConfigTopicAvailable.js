@@ -16,9 +16,9 @@ const ConfigTopicAvailable = () => {
   }, [ros, isCon]);
 
   return (
-    <div className="status-card">
+    <div className="status-card" id="config-available-card">
       <h3 className="card-title">Topics Available</h3>
-      <ul>
+      <ul id="config-available">
         {isCon && topicsRef.current
           ? topicsRef.current.map((element) => {
               return (
