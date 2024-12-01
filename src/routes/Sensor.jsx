@@ -4,6 +4,7 @@ import Camera from "../Components/Camera";
 import { RosProvider, useRos } from "../Utils/RosConnProvider";
 import PointCloud from "../Components/PointCloud";
 import IMU from "../Components/IMU";
+import Compass from "../Components/Compass";
 
 export default function Sensor() {
   const { isCon } = useRos();
@@ -35,14 +36,17 @@ export default function Sensor() {
         </div>
       )}
 
-      <div className="card">
-        <h3 className="card-title"> Sensor Fusion </h3>
-        <img
-          className="sample-img"
-          src="https://iacopomc.github.io/assets/images/sensor-fusion-tracking-post/img_pcl.JPG"
-          alt="lidar sensor fusion"
-        />
-      </div>
+      {isCon ? (
+        <Compass />
+      ) : (
+        <div className="card" id="compass-card">
+          <h3 className="card-title"> Compass </h3>
+          <div>
+            No websocket connection.
+          </div>
+        </div>
+      )}
+
       {isCon ? (
         <IMU />
       ) : (
