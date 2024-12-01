@@ -16,7 +16,7 @@ const PointCloud = () => {
   const cameraRef = useRef(
     new THREE.PerspectiveCamera(
       75,
-      window.innerWidth / window.innerHeight,
+      500 / 500,
       0.1,
       1000
     )
@@ -34,12 +34,14 @@ const PointCloud = () => {
     //Only create a renderer if we do not currently have one.
     if(!rendererRef.current){
       rendererRef.current = new THREE.WebGLRenderer({ antialias: true });
-      rendererRef.current.setSize(window.innerWidth, window.innerHeight);
+      rendererRef.current.setSize(500, 500);
+      cameraRef.current.aspect = 500/500;
+      cameraRef.current.updateProjectionMatrix();
       mountRef.current.appendChild(rendererRef.current.domElement);
     }
 
     //Camera things
-    cameraRef.current.position.set(0, 0, 500); // Move the camera to ensure the axes are visible
+    cameraRef.current.position.set(0, 0, 215); 
     cameraRef.current.lookAt(0, 0, 0);
 
     // Add Axes Helper to show x, y, z directions at origin
@@ -179,6 +181,7 @@ const PointCloud = () => {
 
     }
   }, [ros, isCon, refresh]);
+
   return (
     <div className="card">
       <h3 className="card-title"> Lidar </h3>

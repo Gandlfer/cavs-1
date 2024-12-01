@@ -11,7 +11,7 @@ const IMU = () => {
   const cameraRef = useRef(
     new THREE.PerspectiveCamera(
       75,
-      window.innerWidth / window.innerHeight,
+      500 / 500,
       0.1,
       1000
     )
@@ -33,11 +33,11 @@ const IMU = () => {
     //Only create a renderer if we do not currently have one
     if(!rendererRef.current){
       rendererRef.current = new THREE.WebGLRenderer({ antialias: true });
-      rendererRef.current.setSize(window.innerWidth, window.innerHeight);
+      rendererRef.current.setSize(500, 500);
       mountRef.current.appendChild(rendererRef.current.domElement);
     }
     
-    cameraRef.current.position.set(5, 5, 10); // Move the camera to ensure the axes are visible
+    cameraRef.current.position.set(0.7, 1.5, -4.2); // Move the camera to ensure the axes are visible
     cameraRef.current.lookAt(0, 0, 0);
     // Add Axes Helper to show x, y, z directions at origin
     const axesHelper = new THREE.AxesHelper(15); // Adjust size as needed
@@ -201,14 +201,11 @@ const IMU = () => {
 
   useEffect(() => {
     if (isCon && topicName in topicSubDataRef.current && vehicleRef.current) {
-      const { x, y, z } =
-        topicSubDataRef.current[topicName].message.twist.twist.angular; // Extract quaternion data from imuData
+      const { x, y, z } = topicSubDataRef.current[topicName].message.twist.twist.angular; 
       const quaternion = new THREE.Quaternion(x, y, z);
-      const euler = new THREE.Euler().setFromQuaternion(quaternion, "XYZ");
-      const { x: pitch, y: yaw, z: roll } = euler;
-      //console.log(euler);
-      //vehicleRef.current.rotation.set(pitch, yaw, roll);
       vehicleRef.current.setRotationFromQuaternion(quaternion);
+
+      console.log(cameraRef);
 
       // Update yaw, pitch, roll based on orientation
       yawArrowRef.current.setDirection(
