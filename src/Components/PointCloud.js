@@ -158,12 +158,25 @@ const PointCloud = () => {
         size: 1,
         vertexColors: true,
       });
+
+      //Memory clearing
       if (pointCloudRef.current) {
         sceneRef.current.remove(pointCloudRef.current);
+        if (pointCloudRef.current.geometry) {
+          pointCloudRef.current.geometry.dispose();
+        }
+        if (pointCloudRef.current.material) {
+          pointCloudRef.current.material.dispose();
+        }
+        pointCloudRef.current = null;  // Clear the reference
       }
+  
+      //New PC for next pass
       const pointCloud = new THREE.Points(geometry, material);
       sceneRef.current.add(pointCloud);
-      pointCloudRef.current = pointCloud;
+      pointCloudRef.current = pointCloud;  // Store reference to new point cloud
+      
+
     }
   }, [ros, isCon, refresh]);
   return (
@@ -177,9 +190,9 @@ const PointCloud = () => {
 
 function parsePC2Data(message, vehicleLocation) {
 const points = []; 
-const convertData = base64ToUint8Array(message.data);
-const dataView = new DataView(convertData.buffer); //Shove into a Dataview so that we can handle different data types in the future
-const { height, width, point_step, fields } = message; 
+let convertData = base64ToUint8Array(message.data);
+let dataView = new DataView(convertData.buffer); //Shove into a Dataview so that we can handle different data types in the future
+const { height, width, point_step, fields, is_bigendian } = message; 
 
 //Cannot necicarily assume that all things follow the same offset pattern
 const xOffset = fields.find(f => f.name === 'x').offset;
@@ -193,10 +206,10 @@ for (let i = 0; i < height * width; i++)
   const startingIndex = i * point_step; //Where we start to read
   //Assuming type = 7 this should be revised to another function that actually handles things based upon type value and endian flag.
   //TODO: Make alt fucntionality paths if type is not 7
-  const xData = dataView.getFloat32(startingIndex + xOffset, true) //datatyep = 7 & is_bigendian = false
-  const yData = dataView.getFloat32(startingIndex + yOffset, true)
-  const zData = dataView.getFloat32(startingIndex + zOffset, true)
-  const intensity = dataView.getFloat32(startingIndex + intenOffset, true)
+  const xData = dataView.getFloat32(startingIndex + xOffset, !is_bigendian) 
+  const yData = dataView.getFloat32(startingIndex + yOffset, !is_bigendian)
+  const zData = dataView.getFloat32(startingIndex + zOffset, !is_bigendian)
+  const intensity = dataView.getFloat32(startingIndex + intenOffset, !is_bigendian)
 
   //Turn intensity into a color
   const normalizedIntensity = (intensity || 0) / 255;
@@ -208,7 +221,20 @@ for (let i = 0; i < height * width; i++)
     color: { r: color.r, g: color.g, b: color.b },
   });
 }
+
+dataView = null;
+convertData = null;
+
 return points;
+}
+
+function base64ToUint8Array(base64) {
+  var raw = atob(base64);
+  var uint8Array = new Uint8Array(raw.length);
+  for (var i = 0; i < raw.length; i++) {
+    uint8Array[i] = raw.charCodeAt(i);
+  }
+  return uint8Array;
 }
 
 function findVehicleLocation(odomMessage) {
@@ -222,12 +248,5 @@ function findVehicleLocation(odomMessage) {
   return {x: posx, y: posy, euler: euler};
 }
 
-function base64ToUint8Array(base64) {
-  var raw = atob(base64);
-  var uint8Array = new Uint8Array(raw.length);
-  for (var i = 0; i < raw.length; i++) {
-    uint8Array[i] = raw.charCodeAt(i);
-  }
-  return uint8Array;
-}
+
 export default PointCloud;
