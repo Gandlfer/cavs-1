@@ -115,12 +115,13 @@ const PointCloud = () => {
 
   //Pulling data from subscription
   useEffect(() => {
-    if (topicName in topicSubDataRef.current && isCon) {
+    //Ensure that there is data from Lidar & Odometry & an active connection is open
+    if (topicName in topicSubDataRef.current && odometryTopic in topicSubDataRef.current && isCon) {
       const geometry = new THREE.BufferGeometry();
       const vertices = [];
       const colors = [];
 
-      const vehicleLocation = findVehicleLocation(topicSubDataRef.current[odometryTopic].message)
+      const vehicleLocation = findVehicleLocation(topicSubDataRef.current[odometryTopic].message);
 
       parsePC2Data(topicSubDataRef.current[topicName].message, vehicleLocation).forEach(
         (point) => {
