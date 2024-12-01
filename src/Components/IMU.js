@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-import ROSLIB from "roslib";
+import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useRos } from "../Utils/RosConnProvider.js";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
@@ -24,7 +23,6 @@ const IMU = () => {
   const controlsRef = useRef(null);
 
   const topicName = "/nature/odometry";
-  const [data, setData] = useState(0);
 
 
   useEffect(() => {
@@ -82,7 +80,6 @@ const IMU = () => {
       sceneRef.current.add(vehicle);
       vehicleRef.current = vehicle;
 
-      //console.log("Here");
       // Orbit Controls setup
       if (!controlsRef.current) {
         controlsRef.current = new OrbitControls(

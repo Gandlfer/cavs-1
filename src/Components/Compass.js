@@ -20,20 +20,12 @@ const Compass = () => {
 
   return (
     <div className="card">
-      <h3 className="card-title"> Lidar </h3>
+      <h3 className="card-title"> Compass </h3>
       <div style={{ width: "100%", height: "100%" }}>
       <p>{`Heading: ${radiansToDegrees(heading).toFixed(2)}°`}</p>
       </div>
 
     </div>
-    // <div className="compass">
-    //   <h3>Compass</h3>
-    //   {heading !== null ? (
-    //     <p>{`Heading: ${radiansToDegrees(heading).toFixed(2)}°`}</p>
-    //   ) : (
-    //     <p> Unable to read pose.pose.orientation from Odometry topic message. Are you subscribed to the correct topic?</p>
-    //   )}
-    // </div>
   );
 };
 

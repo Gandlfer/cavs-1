@@ -1,27 +1,17 @@
-import React, {
-  useState,
-  useEffect,
-  createElement,
-  useRef,
-  useMemo,
-} from "react";
+import { useState, useEffect, useRef} from "react";
 import "../index.css";
-import ROSLIB from "roslib";
 import { useRos } from "../Utils/RosConnProvider.js";
 
 const Camera = () => {
   const { ros, isCon, topicSubDataRef, refresh } = useRos();
   var canvasRef = useRef(null);
   const name = "/mavs_ros/image";
-  const [error, setError] = useState({ err: false, errMsg: "" });
-  const [pubRate, setPubRate] = useState(0);
   const [cameraHeight, setCameraHeight] = useState(0);
   const [cameraWidth, setCameraWidth] = useState(0);
   const [messageTest, setMessageTest] = useState({});
 
   useEffect(() => {
     if (name in topicSubDataRef.current) {
-      setPubRate(topicSubDataRef.current[name].pubRate);
       setMessageTest(topicSubDataRef.current[name].message);
       if (Object.keys(messageTest).length > 0) {
         drawCanvas(messageTest, canvasRef);
@@ -33,14 +23,13 @@ const Camera = () => {
 
   return (
     <div className="card">
-      <p>{error.err ? null : "Publishing Rate: " + pubRate}</p>
+      <h3 className="card-title"> Camera from {name} </h3>
       <canvas
         className="card-img"
         ref={canvasRef}
         height={cameraHeight}
         width={cameraWidth}
       />
-      <p>{error.err ? error.errMsg : "Camera from MAVS"}</p>
     </div>
   );
 };

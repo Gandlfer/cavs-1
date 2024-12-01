@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { useRos } from "../Utils/RosConnProvider.js";
-import { Grid, PointCloud2, Viewer, ROS3D } from "ros3d";
-import ROSLIB from "roslib";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 
