@@ -109,7 +109,9 @@ const PointCloud = () => {
 
     //Cleanup old frames
     return () => {
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
     };
   }, []);
 
@@ -121,13 +123,24 @@ const PointCloud = () => {
       const vertices = [];
       const colors = [];
 
+      //Use Odometry message to adjust PC2 data
       const vehicleLocation = findVehicleLocation(topicSubDataRef.current[odometryTopic].message);
+      const rotationMatrix = new THREE.Matrix4();
+      rotationMatrix.makeRotationFromEuler(vehicleLocation.euler);
+
+      
 
       parsePC2Data(topicSubDataRef.current[topicName].message, vehicleLocation).forEach(
         (point) => {
           const { position, color } = point;
-          vertices.push(position.x, position.y, position.z);
+          //Need points in a vector to rotate them
+          const pointVect = new THREE.Vector3(position.x, position.y, position.z); //Could probably refactor parse PC2Data for this...
+          pointVect.applyMatrix4(rotationMatrix);
 
+          
+
+          //Push updated verticies & colors into array
+          vertices.push(pointVect.x, pointVect.y, pointVect.z);
           colors.push(color.r, color.g, color.b);
         }
       );
@@ -199,9 +212,14 @@ return points;
 }
 
 function findVehicleLocation(odomMessage) {
-  const x = odomMessage.pose.pose.position.x;
-  const y = odomMessage.pose.pose.position.y;
-  return {x: x, y: y};
+  const posx = odomMessage.pose.pose.position.x;
+  const posy = odomMessage.pose.pose.position.y;
+  
+  //Quaternion to Euler 
+  const {x, y, z, w} = odomMessage.pose.pose.orientation;
+  const quaternion = new THREE.Quaternion(x,y,z,w);
+  const euler = new THREE.Euler().setFromQuaternion(quaternion, "XYZ");
+  return {x: posx, y: posy, euler: euler};
 }
 
 function base64ToUint8Array(base64) {
