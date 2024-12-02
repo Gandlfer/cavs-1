@@ -1,7 +1,7 @@
 import { useState, createContext, useContext, useEffect, useRef } from "react";
 import ROSLIB from "roslib";
 import DefaultServerUrl from "../PlaceholderFiles/ConfigData.jsx";
-
+import ConfigData from "../PlaceholderFiles/ConfigData.jsx";
 const RosContext = createContext();
 
 export const useRos = () => {
@@ -22,7 +22,64 @@ export const RosProvider = ({ children }) => {
   const [load, setLoad] = useState(true);
   let rosConn;
 
-  const setSubscribedTopics = (data) => {};
+  const subscribeToTopics = (topicList) => {
+    topicList.forEach((topicName) => {
+      let topicType;
+      ros.getTopicType(
+        topicName,
+        (type) => {
+          topicType = type;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+
+      const newTopic = new ROSLIB.Topic({
+        ros: ros,
+        name: topicName,
+        messageType: topicType,
+      });
+      subcribedTopics.current[topicName] = newTopic;
+      newTopic.subscribe((message) => {
+        if (!(topicName in topicSubDataRef.current)) {
+          topicSubDataRef.current[topicName] = {};
+          topicSubDataRef.current[topicName].prevTime = Date.now();
+          topicSubDataRef.current[topicName].pubRate = 0;
+        } else {
+          let rate =
+            1 /
+            ((Date.now() - topicSubDataRef.current[topicName].prevTime) / 1000);
+
+          if (isFinite(rate)) {
+            topicSubDataRef.current[topicName].pubRate = Math.ceil(rate);
+          } else {
+            topicSubDataRef.current[topicName].pubRate = 0;
+          }
+
+          topicSubDataRef.current[topicName].prevTime = Date.now();
+        }
+        topicSubDataRef.current[topicName].message = message;
+        temp = !temp;
+        setRefresh(temp);
+      });
+    });
+  };
+
+  const resubscribeToTopics = (newTopics) => {
+    // Unsubscribe from all current topics
+    Object.keys(subcribedTopics.current).forEach((topicName) => {
+      if (subcribedTopics.current[topicName]) {
+        subcribedTopics.current[topicName].unsubscribe();
+        console.log("Unsubscribing");
+      }
+    });
+    subcribedTopics.current = {};
+
+    console.log("Resub");
+    // Subscribe to only the selected topics
+    subscribeToTopics(newTopics);
+  };
 
   const setAvailableTopics = () => {
     ros.getTopics((result) => {
@@ -44,51 +101,7 @@ export const RosProvider = ({ children }) => {
 
   useEffect(() => {
     if (ros) {
-      ros.getTopics((result) => {
-        result.topics.forEach((topicName, i) => {
-          if (
-            topicName == "/mavs_ros/image" ||
-            topicName == "/nature/global_path" ||
-            topicName == "/nature/local_path" ||
-            topicName == "/nature/occupancy_grid" ||
-            topicName == "/nature/odometry" ||
-            topicName == "/nature/state" ||
-            topicName == "/nature/waypoints" ||
-            topicName == "/nature/points" ||
-            topicName == "/mavs_ros/imu"
-          ) {
-            const testTopic = new ROSLIB.Topic({
-              ros: ros,
-              name: topicName,
-              messageType: result["types"][i],
-            });
-
-            testTopic.subscribe((message) => {
-              if (!(topicName in topicSubDataRef.current)) {
-                topicSubDataRef.current[topicName] = {};
-                topicSubDataRef.current[topicName].prevTime = Date.now();
-                topicSubDataRef.current[topicName].pubRate = 0;
-              } else {
-                let rate =
-                  1 /
-                  ((Date.now() - topicSubDataRef.current[topicName].prevTime) /
-                    1000);
-
-                if (isFinite(rate)) {
-                  topicSubDataRef.current[topicName].pubRate = Math.ceil(rate);
-                } else {
-                  topicSubDataRef.current[topicName].pubRate = 0;
-                }
-
-                topicSubDataRef.current[topicName].prevTime = Date.now();
-              }
-              topicSubDataRef.current[topicName].message = message;
-              temp = !temp;
-              setRefresh(temp);
-            });
-          }
-        });
-      });
+      subscribeToTopics(ConfigData.map((obj) => obj.path));
     }
     return () => {
       if (ros != null) {
@@ -122,8 +135,8 @@ export const RosProvider = ({ children }) => {
         isCon,
         topicSubDataRef,
         refresh,
-        subcribedTopics,
         availableTopicsRefresh,
+        resubscribeToTopics,
       }}
     >
       {children}

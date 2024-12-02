@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import ConfigData from "../PlaceholderFiles/ConfigData";
 import ConfigTopicAvailable from "../Components/ConfigTopicAvailable";
 import { useRos } from "../Utils/RosConnProvider";
@@ -7,8 +7,26 @@ import { Slide, ToastContainer, toast } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 
 export default function Config() {
-  const { defaultURLRef } = useRos();
+  const { defaultURLRef,resubscribeToTopics } = useRos();
+  const [config, setConfig] = useState(ConfigData);
   const notify = () => toast.success("Path Saved");
+
+  // Handle input changes
+  const handleInputChange = (index, newPath) => {
+    const updatedConfig = [...config];
+    updatedConfig[index].path = newPath;
+    setConfig(updatedConfig);
+  };
+
+  // Save data 
+  const handleSave = () => {
+    // Here you can send the `config` state to your backend or update the file
+    console.log("Saving Config:", config);
+    console.log(config.map((obj) => obj.path))
+    resubscribeToTopics(config.map((obj) => obj.path))
+    notify();
+  };
+
   return (
     <div id="config-container" className="body">
       <div id="server-box" className="status-card">
@@ -52,13 +70,13 @@ export default function Config() {
                   <span className="topic-name" id={"light"}>
                     {val.name}
                   </span>
-                  <input className="topic-path" defaultValue={val.path} />
+                  <input className="topic-path" defaultValue={val.path} onChange={(e) => handleInputChange(key, e.target.value)}/>
                 </li>
               );
             })}
           </ul>
         </div>
-        <button id="save-config" onClick={notify}>
+        <button id="save-config" onClick={handleSave}>
           Save
         </button>
       </div>
