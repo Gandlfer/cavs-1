@@ -75,7 +75,7 @@ export const RosProvider = ({ children }) => {
       }
     });
     subcribedTopics.current = {};
-
+    topicSubDataRef.current = {};
     console.log("Resub");
     // Subscribe to only the selected topics
     subscribeToTopics(newTopics);
