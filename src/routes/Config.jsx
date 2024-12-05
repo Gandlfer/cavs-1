@@ -7,7 +7,7 @@ import { Slide, ToastContainer, toast } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 
 export default function Config() {
-  const { defaultURLRef,resubscribeToTopics } = useRos();
+  const { defaultURLRef,resubscribeToTopics,isCon } = useRos();
   const [config, setConfig] = useState(ConfigData);
   const notify = () => toast.success("Path Saved");
 
@@ -21,10 +21,15 @@ export default function Config() {
   // Save data 
   const handleSave = () => {
     // Here you can send the `config` state to your backend or update the file
-    console.log("Saving Config:", config);
-    console.log(config.map((obj) => obj.path))
-    resubscribeToTopics(config.map((obj) => obj.path))
-    notify();
+    if (isCon){
+      console.log("Saving Config:", config);
+
+      console.log(config.reduce((acc,obj) => {acc[obj.name]= obj.path; return acc},{}))
+
+      resubscribeToTopics(config.reduce((acc,obj) => {acc[obj.name]= obj.path; return acc},{}))
+      notify();
+    }
+    
   };
 
   return (

@@ -4,22 +4,16 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 const PointCloud = () => {
-  const { ros, isCon, refresh, topicSubDataRef } = useRos();
+  const { ros, isCon, refresh, topicSubDataRef, subscribedTopics } = useRos();
   const [exist, setExist] = useState(false);
-  const topicName = "/nature/points";
-  const odometryTopic = "/nature/odometry";
+  //const subscribedTopics.current["Point Cloud"].path = subscribedTopics.current["Point Cloud"].path;
+  //const odometryTopic = subscribedTopics.current["Odometry"].path;
 
   const mountRef = useRef(null);
   const sceneRef = useRef(new THREE.Scene());
   const cameraRef = useRef(
-    new THREE.PerspectiveCamera(
-      75,
-      500 / 500,
-      0.1,
-      1000
-    )
+    new THREE.PerspectiveCamera(75, 500 / 500, 0.1, 1000)
   );
-
 
   const rendererRef = useRef(null); // was new THREE.WebGLRenderer({ antialias: true })
   const pointCloudRef = useRef();
@@ -30,16 +24,16 @@ const PointCloud = () => {
     const mount = mountRef.current;
 
     //Only create a renderer if we do not currently have one.
-    if(!rendererRef.current){
+    if (!rendererRef.current) {
       rendererRef.current = new THREE.WebGLRenderer({ antialias: true });
       rendererRef.current.setSize(500, 500);
-      cameraRef.current.aspect = 500/500;
+      cameraRef.current.aspect = 500 / 500;
       cameraRef.current.updateProjectionMatrix();
       mountRef.current.appendChild(rendererRef.current.domElement);
     }
 
     //Camera things
-    cameraRef.current.position.set(0, 0, 215); 
+    cameraRef.current.position.set(0, 0, 215);
     cameraRef.current.lookAt(0, 0, 0);
 
     // Add Axes Helper to show x, y, z directions at origin
@@ -118,32 +112,40 @@ const PointCloud = () => {
   //Pulling data from subscription
   useEffect(() => {
     //Ensure that there is data from Lidar & Odometry & an active connection is open
-    if (topicName in topicSubDataRef.current && odometryTopic in topicSubDataRef.current && isCon) {
+    console.log();
+    if (
+      "Point Cloud" in subscribedTopics.current &&
+      "Odometry" in subscribedTopics.current &&
+      subscribedTopics.current["Point Cloud"].path in topicSubDataRef.current &&
+      subscribedTopics.current["Odometry"].path in topicSubDataRef.current &&
+      isCon
+    ) {
       const geometry = new THREE.BufferGeometry();
       const vertices = [];
       const colors = [];
 
       //Use Odometry message to adjust PC2 data
-      const vehicleLocation = findVehicleLocation(topicSubDataRef.current[odometryTopic].message);
+      const vehicleLocation = findVehicleLocation(
+        topicSubDataRef.current[subscribedTopics.current["Odometry"].path]
+          .message
+      );
       const rotationMatrix = new THREE.Matrix4();
       rotationMatrix.makeRotationFromEuler(vehicleLocation.euler);
 
-      
+      parsePC2Data(
+        topicSubDataRef.current[subscribedTopics.current["Point Cloud"].path]
+          .message,
+        vehicleLocation
+      ).forEach((point) => {
+        const { position, color } = point;
+        //Need points in a vector to rotate them
+        const pointVect = new THREE.Vector3(position.x, position.y, position.z); //Could probably refactor parse PC2Data for this...
+        pointVect.applyMatrix4(rotationMatrix);
 
-      parsePC2Data(topicSubDataRef.current[topicName].message, vehicleLocation).forEach(
-        (point) => {
-          const { position, color } = point;
-          //Need points in a vector to rotate them
-          const pointVect = new THREE.Vector3(position.x, position.y, position.z); //Could probably refactor parse PC2Data for this...
-          pointVect.applyMatrix4(rotationMatrix);
-
-          
-
-          //Push updated verticies & colors into array
-          vertices.push(pointVect.x, pointVect.y, pointVect.z);
-          colors.push(color.r, color.g, color.b);
-        }
-      );
+        //Push updated verticies & colors into array
+        vertices.push(pointVect.x, pointVect.y, pointVect.z);
+        colors.push(color.r, color.g, color.b);
+      });
       geometry.setAttribute(
         "position",
         new THREE.Float32BufferAttribute(vertices, 3)
@@ -168,15 +170,13 @@ const PointCloud = () => {
         if (pointCloudRef.current.material) {
           pointCloudRef.current.material.dispose();
         }
-        pointCloudRef.current = null;  // Clear the reference
+        pointCloudRef.current = null; // Clear the reference
       }
-  
+
       //New PC for next pass
       const pointCloud = new THREE.Points(geometry, material);
       sceneRef.current.add(pointCloud);
-      pointCloudRef.current = pointCloud;  // Store reference to new point cloud
-      
-
+      pointCloudRef.current = pointCloud; // Store reference to new point cloud
     }
   }, [ros, isCon, refresh]);
 
@@ -188,45 +188,50 @@ const PointCloud = () => {
   );
 };
 
-
 function parsePC2Data(message, vehicleLocation) {
-const points = []; 
-let convertData = base64ToUint8Array(message.data);
-let dataView = new DataView(convertData.buffer); //Shove into a Dataview so that we can handle different data types in the future
-const { height, width, point_step, fields, is_bigendian } = message; 
+  const points = [];
+  let convertData = base64ToUint8Array(message.data);
+  let dataView = new DataView(convertData.buffer); //Shove into a Dataview so that we can handle different data types in the future
+  const { height, width, point_step, fields, is_bigendian } = message;
 
-//Cannot necicarily assume that all things follow the same offset pattern
-const xOffset = fields.find(f => f.name === 'x').offset;
-const yOffset = fields.find(f => f.name === 'y').offset;
-const zOffset = fields.find(f => f.name === 'z').offset;
-const intenOffset = fields.find(f => f.name === 'intensity').offset;
+  //Cannot necicarily assume that all things follow the same offset pattern
+  const xOffset = fields.find((f) => f.name === "x").offset;
+  const yOffset = fields.find((f) => f.name === "y").offset;
+  const zOffset = fields.find((f) => f.name === "z").offset;
+  const intenOffset = fields.find((f) => f.name === "intensity").offset;
 
-//There are width * height points
-for (let i = 0; i < height * width; i++)
-{
-  const startingIndex = i * point_step; //Where we start to read
-  //Assuming type = 7 this should be revised to another function that actually handles things based upon type value and endian flag.
-  //TODO: Make alt fucntionality paths if type is not 7
-  const xData = dataView.getFloat32(startingIndex + xOffset, !is_bigendian) 
-  const yData = dataView.getFloat32(startingIndex + yOffset, !is_bigendian)
-  const zData = dataView.getFloat32(startingIndex + zOffset, !is_bigendian)
-  const intensity = dataView.getFloat32(startingIndex + intenOffset, !is_bigendian)
+  //There are width * height points
+  for (let i = 0; i < height * width; i++) {
+    const startingIndex = i * point_step; //Where we start to read
+    //Assuming type = 7 this should be revised to another function that actually handles things based upon type value and endian flag.
+    //TODO: Make alt fucntionality paths if type is not 7
+    const xData = dataView.getFloat32(startingIndex + xOffset, !is_bigendian);
+    const yData = dataView.getFloat32(startingIndex + yOffset, !is_bigendian);
+    const zData = dataView.getFloat32(startingIndex + zOffset, !is_bigendian);
+    const intensity = dataView.getFloat32(
+      startingIndex + intenOffset,
+      !is_bigendian
+    );
 
-  //Turn intensity into a color
-  const normalizedIntensity = (intensity || 0) / 255;
-  const color = new THREE.Color();
-  color.setHSL(normalizedIntensity, 1.0, 0.5); // Adjust hue based on intensity
+    //Turn intensity into a color
+    const normalizedIntensity = (intensity || 0) / 255;
+    const color = new THREE.Color();
+    color.setHSL(normalizedIntensity, 1.0, 0.5); // Adjust hue based on intensity
 
-  points.push({
-    position: { x: xData - vehicleLocation.x, y: yData - vehicleLocation.y, z: zData },
-    color: { r: color.r, g: color.g, b: color.b },
-  });
-}
+    points.push({
+      position: {
+        x: xData - vehicleLocation.x,
+        y: yData - vehicleLocation.y,
+        z: zData,
+      },
+      color: { r: color.r, g: color.g, b: color.b },
+    });
+  }
 
-dataView = null;
-convertData = null;
+  dataView = null;
+  convertData = null;
 
-return points;
+  return points;
 }
 
 function base64ToUint8Array(base64) {
@@ -241,13 +246,12 @@ function base64ToUint8Array(base64) {
 function findVehicleLocation(odomMessage) {
   const posx = odomMessage.pose.pose.position.x;
   const posy = odomMessage.pose.pose.position.y;
-  
-  //Quaternion to Euler 
-  const {x, y, z, w} = odomMessage.pose.pose.orientation;
-  const quaternion = new THREE.Quaternion(x,y,z,w);
-  const euler = new THREE.Euler().setFromQuaternion(quaternion, "XYZ");
-  return {x: posx, y: posy, euler: euler};
-}
 
+  //Quaternion to Euler
+  const { x, y, z, w } = odomMessage.pose.pose.orientation;
+  const quaternion = new THREE.Quaternion(x, y, z, w);
+  const euler = new THREE.Euler().setFromQuaternion(quaternion, "XYZ");
+  return { x: posx, y: posy, euler: euler };
+}
 
 export default PointCloud;

@@ -3,13 +3,18 @@ import { useRos } from "../Utils/RosConnProvider.js";
 import * as THREE from "three";
 
 const Compass = () => {
-  const { ros, isCon, refresh, topicSubDataRef } = useRos();
+  const { ros, isCon, refresh, topicSubDataRef, subscribedTopics } = useRos();
   const [heading, setHeading] = useState(null);
-  const topicName = "/nature/odometry";
 
   useEffect(() => {
-    if (isCon && topicName in topicSubDataRef.current) {
-      const odomMessage = topicSubDataRef.current[topicName].message;
+    if (
+      isCon &&
+      "Odometry" in subscribedTopics.current &&
+      subscribedTopics.current["Odometry"].path in topicSubDataRef.current
+    ) {
+      const odomMessage =
+        topicSubDataRef.current[subscribedTopics.current["Odometry"].path]
+          .message;
       //Compass direction is the Y value
       setHeading(getEuler(odomMessage).y);
     }
@@ -22,9 +27,8 @@ const Compass = () => {
     <div className="card">
       <h3 className="card-title"> Compass </h3>
       <div style={{ width: "100%", height: "100%" }}>
-      <p>{`Heading: ${radiansToDegrees(heading).toFixed(2)}°`}</p>
+        <p>{`Heading: ${radiansToDegrees(heading).toFixed(2)}°`}</p>
       </div>
-
     </div>
   );
 };

@@ -11,12 +11,10 @@ import { useRos } from "../Utils/RosConnProvider.js";
 import { useEffect, useState } from "react";
 
 const MapComponent = () => {
-  const localPathTopicName = "/nature/local_path";
-  const globalPathTopicName = "/nature/global_path";
-  const testTopicName = "/nature/odometry";
   const [globalPath, setGlobalPath] = useState([]);
   const [currentPosition, setCurrentPosition] = useState([0, 0]);
-  const { ros, isCon, topicSubDataRef, refresh } = useRos();
+  const { ros, isCon, topicSubDataRef, refresh, subscribedTopics } = useRos();
+
   const getDataArray = (arr) => {
     let dataArray = [];
     //console.log(arr);
@@ -27,8 +25,10 @@ const MapComponent = () => {
   };
   useEffect(() => {
     if (
-      localPathTopicName in topicSubDataRef.current &&
-      globalPathTopicName in topicSubDataRef.current
+      "Local Path" in subscribedTopics.current &&
+      "Global Path" in subscribedTopics.current &&
+      subscribedTopics.current["Local Path"].path in topicSubDataRef.current &&
+      subscribedTopics.current["Global Path"].path in topicSubDataRef.current
     ) {
       // console.log("Local path");
       // console.log(topicSubDataRef.current[localPath]);
@@ -36,16 +36,24 @@ const MapComponent = () => {
       //console.log(topicSubDataRef.current[globalPathTopicName].message);
 
       setGlobalPath(
-        getDataArray(topicSubDataRef.current[globalPathTopicName].message.poses)
+        getDataArray(
+          topicSubDataRef.current[subscribedTopics.current["Global Path"].path]
+            .message.poses
+        )
       );
     }
-    if (testTopicName in topicSubDataRef.current) {
+    if (
+      "Odometry" in subscribedTopics.current &&
+      subscribedTopics.current["Odometry"].path in topicSubDataRef.current
+    ) {
       // console.log(
       //   topicSubDataRef.current[testTopicName].message.pose.pose.position
       // );
       setCurrentPosition([
-        topicSubDataRef.current[testTopicName].message.pose.pose.position.x,
-        topicSubDataRef.current[testTopicName].message.pose.pose.position.y,
+        topicSubDataRef.current[subscribedTopics.current["Odometry"].path]
+          .message.pose.pose.position.x,
+        topicSubDataRef.current[subscribedTopics.current["Odometry"].path]
+          .message.pose.pose.position.y,
       ]);
     }
   }, [ros, isCon, refresh]);

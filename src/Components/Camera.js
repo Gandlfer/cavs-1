@@ -1,18 +1,24 @@
-import { useState, useEffect, useRef} from "react";
+import { useState, useEffect, useRef } from "react";
 import "../index.css";
 import { useRos } from "../Utils/RosConnProvider.js";
 
 const Camera = () => {
-  const { ros, isCon, topicSubDataRef, refresh } = useRos();
+  const { ros, isCon, topicSubDataRef, refresh, subscribedTopics } = useRos();
   var canvasRef = useRef(null);
-  const name = "/mavs_ros/image";
+
   const [cameraHeight, setCameraHeight] = useState(0);
   const [cameraWidth, setCameraWidth] = useState(0);
   const [messageTest, setMessageTest] = useState({});
 
   useEffect(() => {
-    if (name in topicSubDataRef.current) {
-      setMessageTest(topicSubDataRef.current[name].message);
+    if (
+      "Camera 1" in subscribedTopics.current &&
+      subscribedTopics.current["Camera 1"].path in topicSubDataRef.current
+    ) {
+      setMessageTest(
+        topicSubDataRef.current[subscribedTopics.current["Camera 1"].path]
+          .message
+      );
       if (Object.keys(messageTest).length > 0) {
         drawCanvas(messageTest, canvasRef);
         setCameraHeight(messageTest.height);
@@ -23,7 +29,10 @@ const Camera = () => {
 
   return (
     <div className="card">
-      <h3 className="card-title"> Camera from {name} </h3>
+      <h3 className="card-title">
+        {" "}
+        Camera from {subscribedTopics.current["Camera 1"].path}{" "}
+      </h3>
       <canvas
         className="card-img"
         ref={canvasRef}

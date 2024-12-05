@@ -14,7 +14,7 @@ export const RosProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [ros, setRos] = useState(null);
   const topicSubDataRef = useRef({});
-  const subcribedTopics = useRef({});
+  const subscribedTopics = useRef({});
   const defaultURLRef = useRef("localhost:9090");
   const [refresh, setRefresh] = useState(false);
   const [availableTopicsRefresh, setAvailableTopicsRefresh] = useState([]);
@@ -22,8 +22,10 @@ export const RosProvider = ({ children }) => {
   const [load, setLoad] = useState(true);
   let rosConn;
 
+  // Input a list of "Label" : "Path"
   const subscribeToTopics = (topicList) => {
-    topicList.forEach((topicName) => {
+    Object.keys(topicList).forEach((topicLabel) => {
+      const topicName = topicList[topicLabel];
       let topicType;
       ros.getTopicType(
         topicName,
@@ -40,7 +42,12 @@ export const RosProvider = ({ children }) => {
         name: topicName,
         messageType: topicType,
       });
-      subcribedTopics.current[topicName] = newTopic;
+
+      subscribedTopics.current[topicLabel] = {
+        path: topicName,
+        topicSub: newTopic,
+      };
+
       newTopic.subscribe((message) => {
         if (!(topicName in topicSubDataRef.current)) {
           topicSubDataRef.current[topicName] = {};
@@ -68,13 +75,13 @@ export const RosProvider = ({ children }) => {
 
   const resubscribeToTopics = (newTopics) => {
     // Unsubscribe from all current topics
-    Object.keys(subcribedTopics.current).forEach((topicName) => {
-      if (subcribedTopics.current[topicName]) {
-        subcribedTopics.current[topicName].unsubscribe();
+    Object.keys(subscribedTopics.current).forEach((topicLabel) => {
+      if (subscribedTopics.current[topicLabel]) {
+        subscribedTopics.current[topicLabel].topicSub.unsubscribe();
         console.log("Unsubscribing");
       }
     });
-    subcribedTopics.current = {};
+    subscribedTopics.current = {};
     topicSubDataRef.current = {};
     console.log("Resub");
     // Subscribe to only the selected topics
@@ -101,7 +108,12 @@ export const RosProvider = ({ children }) => {
 
   useEffect(() => {
     if (ros) {
-      subscribeToTopics(ConfigData.map((obj) => obj.path));
+      subscribeToTopics(
+        ConfigData.reduce((acc, obj) => {
+          acc[obj.name] = obj.path;
+          return acc;
+        }, {})
+      );
     }
     return () => {
       if (ros != null) {
@@ -136,6 +148,7 @@ export const RosProvider = ({ children }) => {
         topicSubDataRef,
         refresh,
         availableTopicsRefresh,
+        subscribedTopics,
         resubscribeToTopics,
       }}
     >

@@ -4,16 +4,11 @@ import { useRos } from "../Utils/RosConnProvider.js";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 const IMU = () => {
-  const { ros, isCon, refresh, topicSubDataRef } = useRos();
+  const { ros, isCon, refresh, topicSubDataRef, subscribedTopics } = useRos();
   const mountRef = useRef(null);
   const sceneRef = useRef(new THREE.Scene());
   const cameraRef = useRef(
-    new THREE.PerspectiveCamera(
-      75,
-      500 / 500,
-      0.1,
-      1000
-    )
+    new THREE.PerspectiveCamera(75, 500 / 500, 0.1, 1000)
   );
   const rendererRef = useRef(null);
   const vehicleRef = useRef(null);
@@ -22,19 +17,16 @@ const IMU = () => {
   const rollArrowRef = useRef(null);
   const controlsRef = useRef(null);
 
-  const topicName = "/nature/odometry";
-
-
   useEffect(() => {
     const mount = mountRef.current;
 
     //Only create a renderer if we do not currently have one
-    if(!rendererRef.current){
+    if (!rendererRef.current) {
       rendererRef.current = new THREE.WebGLRenderer({ antialias: true });
       rendererRef.current.setSize(500, 500);
       mountRef.current.appendChild(rendererRef.current.domElement);
     }
-    
+
     cameraRef.current.position.set(0.7, 1.5, -4.2); // Move the camera to ensure the axes are visible
     cameraRef.current.lookAt(0, 0, 0);
     // Add Axes Helper to show x, y, z directions at origin
@@ -120,7 +112,7 @@ const IMU = () => {
       );
     }
 
-    //Add the arrows 
+    //Add the arrows
     vehicleRef.current.add(yawArrowRef.current);
     vehicleRef.current.add(pitchArrowRef.current);
     vehicleRef.current.add(rollArrowRef.current);
@@ -128,10 +120,9 @@ const IMU = () => {
     //Disposal / cleanup
     return () => {
       //Dispose the renderer
-      if(rendererRef.current){
+      if (rendererRef.current) {
         rendererRef.current.dispose();
-        if(rendererRef.current.domElement)
-        {
+        if (rendererRef.current.domElement) {
           mount.removeChild(rendererRef.current.domElement);
         }
         rendererRef.current = null;
@@ -157,7 +148,7 @@ const IMU = () => {
 
       //Dispose Axes Helper from scene
       sceneRef.current.remove(axesHelper);
-      if (axesHelper.geometry){
+      if (axesHelper.geometry) {
         axesHelper.geometry.dispose();
       }
 
@@ -168,16 +159,16 @@ const IMU = () => {
       }
 
       //Nullify the arrows
-      if (yawArrowRef.current){
+      if (yawArrowRef.current) {
         yawArrowRef.current = null;
       }
-      if (pitchArrowRef.current){
+      if (pitchArrowRef.current) {
         pitchArrowRef.current = null;
       }
-      if (rollArrowRef.current){
+      if (rollArrowRef.current) {
         rollArrowRef.current = null;
       }
-    }
+    };
   }, []);
 
   //Animation
@@ -185,20 +176,26 @@ const IMU = () => {
     let animationFrameId;
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
-      if(controlsRef.current){
+      if (controlsRef.current) {
         controlsRef.current.update();
       }
-      if(rendererRef.current){
+      if (rendererRef.current) {
         rendererRef.current.render(sceneRef.current, cameraRef.current);
       }
     };
     animate();
   }, []);
 
-
   useEffect(() => {
-    if (isCon && topicName in topicSubDataRef.current && vehicleRef.current) {
-      const { x, y, z } = topicSubDataRef.current[topicName].message.twist.twist.angular; 
+    if (
+      isCon &&
+      "Odometry" in subscribedTopics.current &&
+      subscribedTopics.current["Odometry"].path in topicSubDataRef.current &&
+      vehicleRef.current
+    ) {
+      const { x, y, z } =
+        topicSubDataRef.current[subscribedTopics.current["Odometry"].path]
+          .message.twist.twist.angular;
       const quaternion = new THREE.Quaternion(x, y, z);
       vehicleRef.current.setRotationFromQuaternion(quaternion);
 
