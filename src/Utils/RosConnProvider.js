@@ -94,6 +94,20 @@ export const RosProvider = ({ children }) => {
     });
   };
 
+  const reconnectRos = (newUrl) => {
+    if (ros) {
+      ros.close();
+    }
+    setLoading(true);
+    defaultURLRef.current = newUrl;
+    const newRos = new ROSLIB.Ros({
+      url: "ws://" + defaultURLRef.current,
+    });
+
+    setRos(newRos);
+    setLoading(false);
+  };
+
   useEffect(() => {
     function connection() {
       setLoading(true);
@@ -117,7 +131,7 @@ export const RosProvider = ({ children }) => {
     }
     return () => {
       if (ros != null) {
-        topicSubDataRef.current.keys().map((topicName, i) => {});
+        //topicSubDataRef.current.keys().map((topicName, i) => {});
         topicSubDataRef.current = {};
         ros.close();
       }
@@ -150,6 +164,7 @@ export const RosProvider = ({ children }) => {
         availableTopicsRefresh,
         subscribedTopics,
         resubscribeToTopics,
+        reconnectRos,
       }}
     >
       {children}

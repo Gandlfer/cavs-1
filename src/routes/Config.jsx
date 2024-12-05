@@ -7,7 +7,7 @@ import { Slide, ToastContainer, toast } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 
 export default function Config() {
-  const { defaultURLRef,resubscribeToTopics,isCon } = useRos();
+  const { defaultURLRef,resubscribeToTopics,isCon,reconnectRos } = useRos();
   const [config, setConfig] = useState(ConfigData);
   const notify = () => toast.success("Path Saved");
 
@@ -32,6 +32,18 @@ export default function Config() {
     
   };
 
+  const handleSaveServer = () =>{
+    const newUrl = document.getElementById("server-path").value;
+    if (newUrl.replace("ws://","") != defaultURLRef.current){
+      //if (newUrl && isCon) {
+            console.log("Reconnecting to ROS at:", newUrl.replace("ws://",""));
+            reconnectRos(newUrl.replace("ws://","")); // Reconnect to ROS using the new WebSocket URL
+            notify();
+          //}
+    }
+    
+  }
+
   return (
     <div id="config-container" className="body">
       <div id="server-box" className="status-card">
@@ -47,7 +59,7 @@ export default function Config() {
         <button
           id="save-server-button"
           className="ctrl-button"
-          onClick={notify}
+          onClick={handleSaveServer}
         >
           <Io5.IoSaveOutline />
         </button>
