@@ -18,7 +18,7 @@ const ConfigData = [
   },
   {
     name: "Occupancy Grid",
-    path: "/nature/occupancy_grid",
+    path: "/occupancy_grid_image",
     cName: "topic",
   },
   {

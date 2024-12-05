@@ -1,5 +1,6 @@
 import React from "react";
 import PointCloud from "../Components/PointCloud";
+import Occupancy from "../Components/Occupancy"
 import Card from "../Components/Card";
 import "../index.css";
 import "./Map.css";
@@ -21,14 +22,14 @@ export default function Map() {
           <p> No websocket connection.</p>
         </div>
       )}
-      <div className="card">
-        <h3 className="card-title"> Occupancy grid </h3>
-        <img
-          className="sample-img"
-          src="https://raw.githubusercontent.com/KristofRobot/frobo/master/bagfile/rviz_odom.png"
-          alt="occupancy grid sample"
-        />
-      </div>
+      {isCon ? (
+        <Occupancy />
+      ) : (
+        <div className="card">
+          <h3 className="card-title"> Occupancy Grid </h3>
+          <p> No websocket connection.</p>
+        </div>
+      )}
     </div>
   );
 }
