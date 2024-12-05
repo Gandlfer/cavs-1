@@ -9,20 +9,22 @@ const ControllerButton = () => {
   const [update, setUpdate] = useState(false);
   const topicName = "/nature/state";
   const buttonHandler = () => {
-    if (topicName in topicSubDataRef.current && isCon) {
-      console.log(topicSubDataRef.current[topicName].message);
-      const rosParam = new ROSLIB.Param({
-        ros: ros,
-        name: "/global_path_node/shutdown_behavior",
-      });
-      rosParam.get((value) => {
-        console.log(value);
-      });
-      toast.success("Playing");
-    } else {
-      console.log("Data not ready");
-      toast.error("Data is not ready");
-    }
+    toast.success("Playing");
+    // No data to implement Remote Controls
+    // if (topicName in topicSubDataRef.current && isCon) {
+    //   console.log(topicSubDataRef.current[topicName].message);
+    //   const rosParam = new ROSLIB.Param({
+    //     ros: ros,
+    //     name: "/global_path_node/shutdown_behavior",
+    //   });
+    //   rosParam.get((value) => {
+    //     console.log(value);
+    //   });
+    //   toast.success("Playing");
+    // } else {
+    //   console.log("Data not ready");
+    //   toast.error("Data is not ready");
+    // }
   };
   useEffect(() => {
     // console.log("Controller Refresh");
