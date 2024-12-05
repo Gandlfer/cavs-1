@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useEffect, useState} from "react";
 import ConfigData from "../PlaceholderFiles/ConfigData";
 import ConfigTopicAvailable from "../Components/ConfigTopicAvailable";
 import { useRos } from "../Utils/RosConnProvider";
@@ -7,8 +7,8 @@ import { Slide, ToastContainer, toast } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 
 export default function Config() {
-  const { defaultURLRef,resubscribeToTopics,isCon,reconnectRos } = useRos();
-  const [config, setConfig] = useState(ConfigData);
+  const { ros,defaultURLRef,resubscribeToTopics,isCon,reconnectRos } = useRos();
+  const [config, setConfig] = useState(localStorage.getItem("ConfigData") ? JSON.parse(localStorage.getItem("ConfigData")):ConfigData);
   const notify = () => toast.success("Path Saved");
 
   // Handle input changes
@@ -17,15 +17,15 @@ export default function Config() {
     updatedConfig[index].path = newPath;
     setConfig(updatedConfig);
   };
-
+  
   // Save data 
   const handleSave = () => {
     // Here you can send the `config` state to your backend or update the file
     if (isCon){
       console.log("Saving Config:", config);
-
+      localStorage.setItem("ConfigData",JSON.stringify(config))
       console.log(config.reduce((acc,obj) => {acc[obj.name]= obj.path; return acc},{}))
-
+      console.log(JSON.parse(localStorage.getItem("ConfigData")))
       resubscribeToTopics(config.reduce((acc,obj) => {acc[obj.name]= obj.path; return acc},{}))
       notify();
     }
@@ -81,7 +81,8 @@ export default function Config() {
         <h3 className="card-title">Components</h3>
         <div className="config-components">
           <ul>
-            {ConfigData.map((val, key) => {
+            {console.log(config)}
+            {config.map((val, key) => {
               return (
                 <li key={key} className="topic">
                   <span className="topic-name" id={"light"}>
