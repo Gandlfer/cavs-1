@@ -1,7 +1,6 @@
 import "../index.css";
 import { IconContext } from "react-icons";
 import * as Io5 from "react-icons/io5";
-import TestComponent from "./TestComponent";
 import ControllerButton from "./ControllerButtons";
 import { useRos } from "../Utils/RosConnProvider";
 import ROSLIB from "roslib";
