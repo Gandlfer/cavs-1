@@ -9,9 +9,17 @@ import Config from "./routes/Config";
 import Navbar from "./Components/Navbar";
 import Header from "./Components/Header";
 import { RosProvider } from "./Utils/RosConnProvider";
+import { Toaster } from "react-hot-toast";
 
 const AppLayout = () => (
   <div className="container">
+    <Toaster position="top-center" toastOptions={{
+          style: {
+            fontSize: '13px',  // Smaller font size
+            padding: '8px 12px',  // Adjust padding for a smaller overall size
+          }
+          
+        }}/>
     <Header />
     <Navbar />
     <Outlet />
@@ -48,6 +56,7 @@ export const Router = () => {
   return (
     <RosProvider>
       <RouterProvider router={router} />
+      
     </RosProvider>
   );
 };

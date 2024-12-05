@@ -8,8 +8,7 @@ import { IconContext } from "react-icons";
 import { useRos } from "../Utils/RosConnProvider";
 import ROSLIB from "roslib";
 import ControllerButton from "./ControllerButtons";
-import { Slide, ToastContainer, toast } from "react-toastify";
-import "react-toastify/ReactToastify.css";
+import toast from "react-hot-toast";
 
 export default function Navbar() {
   const { ros, isCon, refresh } = useRos();
@@ -89,19 +88,6 @@ export default function Navbar() {
             <button className="ctrl-button" onClick={notifyPause} title={"Pause Vehicle"}>
               <Io5.IoPause />
             </button>
-            <ToastContainer
-              position="top-center"
-              autoClose={1000}
-              hideProgressBar
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="light"
-              transition={Slide}
-            />
           </div>
         </nav>
       </IconContext.Provider>

@@ -3,7 +3,7 @@ import ConfigData from "../PlaceholderFiles/ConfigData";
 import ConfigTopicAvailable from "../Components/ConfigTopicAvailable";
 import { useRos } from "../Utils/RosConnProvider";
 import * as Io5 from "react-icons/io5";
-import toast,{ Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 export default function Config() {
   const { defaultURLRef, resubscribeToTopics, isCon, reconnectRos } =
@@ -65,13 +65,6 @@ export default function Config() {
   return (
 
     <div id="config-container" className="body">
-      <Toaster position="top-center" toastOptions={{
-          style: {
-            fontSize: '13px',  // Smaller font size
-            padding: '8px 12px',  // Adjust padding for a smaller overall size
-          }
-          
-        }}/>
       <div id="server-box" className="status-card">
         <span id="server-name" className="topic-name">
           Server Address:
