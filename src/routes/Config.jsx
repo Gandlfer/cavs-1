@@ -3,21 +3,21 @@ import ConfigData from "../PlaceholderFiles/ConfigData";
 import ConfigTopicAvailable from "../Components/ConfigTopicAvailable";
 import { useRos } from "../Utils/RosConnProvider";
 import * as Io5 from "react-icons/io5";
-import { Slide, ToastContainer, toast } from "react-toastify";
-import "react-toastify/ReactToastify.css";
+import toast,{ Toaster } from "react-hot-toast";
 
 export default function Config() {
-  const { ros, defaultURLRef, resubscribeToTopics, isCon, reconnectRos } =
+  const { defaultURLRef, resubscribeToTopics, isCon, reconnectRos } =
     useRos();
   const [config, setConfig] = useState(
     localStorage.getItem("ConfigData")
       ? JSON.parse(localStorage.getItem("ConfigData"))
       : ConfigData
   );
-  const notify = () => toast.success("Path Saved");
+  const notify = () => {toast.success("Path Saved")};
 
   // Handle input changes
   const handleInputChange = (index, newPath) => {
+    console.log("Here")
     const updatedConfig = [...config];
     updatedConfig[index].path = newPath;
     setConfig(updatedConfig);
@@ -42,7 +42,9 @@ export default function Config() {
           return acc;
         }, {})
       );
-      notify();
+      
+        notify();
+      
     }
   };
 
@@ -52,13 +54,24 @@ export default function Config() {
       //if (newUrl && isCon) {
       console.log("Reconnecting to ROS at:", newUrl.replace("ws://", ""));
       reconnectRos(newUrl.replace("ws://", "")); // Reconnect to ROS using the new WebSocket URL
-      notify();
+      
+        notify();
+      
+      
       //}
     }
   };
 
   return (
+
     <div id="config-container" className="body">
+      <Toaster position="top-center" toastOptions={{
+          style: {
+            fontSize: '13px',  // Smaller font size
+            padding: '8px 12px',  // Adjust padding for a smaller overall size
+          }
+          
+        }}/>
       <div id="server-box" className="status-card">
         <span id="server-name" className="topic-name">
           Server Address:
@@ -79,25 +92,12 @@ export default function Config() {
         >
           <Io5.IoSaveOutline />
         </button>
-        <ToastContainer
-          position="top-center"
-          autoClose={1000}
-          hideProgressBar
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-          transition={Slide}
-        />
       </div>
       <div className="status-card">
         <h3 className="card-title">Components</h3>
         <div className="config-components">
           <ul>
-            {console.log(config)}
+            {/* {console.log(config)} */}
             {config.map((val, key) => {
               return (
                 <li key={key} className="topic">
