@@ -6,8 +6,6 @@ import { OrbitControls } from "three/examples/jsm/Addons.js";
 const PointCloud = () => {
   const { ros, isCon, refresh, topicSubDataRef, subscribedTopics } = useRos();
   const [exist, setExist] = useState(false);
-  //const subscribedTopics.current["Point Cloud"].path = subscribedTopics.current["Point Cloud"].path;
-  //const odometryTopic = subscribedTopics.current["Odometry"].path;
 
   const mountRef = useRef(null);
   const sceneRef = useRef(new THREE.Scene());
@@ -15,7 +13,7 @@ const PointCloud = () => {
     new THREE.PerspectiveCamera(75, 500 / 500, 0.1, 1000)
   );
 
-  const rendererRef = useRef(null); // was new THREE.WebGLRenderer({ antialias: true })
+  const rendererRef = useRef(null);
   const pointCloudRef = useRef();
   const controlsRef = useRef(null);
 
@@ -183,7 +181,7 @@ const PointCloud = () => {
   return (
     <div className="card">
       <h3 className="card-title"> Lidar </h3>
-      <div ref={mountRef} style={{ width: "100%", height: "100%" }} />
+      <div ref={mountRef} style={{ width: "100%", height: "100%", display: "flex", justifyContent: "center"}} />
     </div>
   );
 };
