@@ -85,11 +85,8 @@ export default function Navbar() {
             </li>
           </ul>
           <div className="navbar-controller">
-            {/* <button className="ctrl-button" >
-              <Io5.IoPlay onClick={buttonPress}/>
-            </button> */}
             <ControllerButton />
-            <button className="ctrl-button" onClick={notifyPause}>
+            <button className="ctrl-button" onClick={notifyPause} title={"Pause Vehicle"}>
               <Io5.IoPause />
             </button>
             <ToastContainer

@@ -38,7 +38,7 @@ const ControllerButton = () => {
 
   return (
     <div>
-      <button className="ctrl-button">
+      <button className="ctrl-button" title="Start/Resume vehicle">
         <Io5.IoPlay onClick={buttonHandler} />
       </button>
       <ToastContainer

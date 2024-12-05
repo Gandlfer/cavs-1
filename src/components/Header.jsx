@@ -21,15 +21,15 @@ export default function Header() {
   };
   const submit = () => {
     confirmAlert({
-      title: "Confirm exit",
-      message: "Are you sure to exit?",
+      title: "Confirm Shutdown",
+      message: "Are you sure to shutdown the vehicle? (It has been paused.)",
       buttons: [
         {
-          label: "No",
+          label: "Shutdown",
           //onClick: () => alert("Click No"),
         },
         {
-          label: "EXIT",
+          label: "Resume",
           //onClick: () => alert("Exiting"),
         },
       ],
@@ -39,14 +39,7 @@ export default function Header() {
     <header className="header">
       <h1>CAVS</h1>
       <div className="controller">
-        {/* {/* <button className="ctrl-button" >
-              <Io5.IoPlay onClick={buttonPress}/>
-            </button> 
-        <ControllerButton />
-        <button className="ctrl-button">
-          <Io5.IoPause />
-        </button> */}
-        <button className="ctrl-button" onClick={submit}>
+          <button className="ctrl-button" onClick={submit} title="Shutdown Vehicle">
           <Io5.IoPower />
         </button>
       </div>
