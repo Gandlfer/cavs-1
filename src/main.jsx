@@ -23,13 +23,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
+        element: <Config />
+      },
+      {
+        path: "map",
         element: <Map />,
-        children: [
-          {
-            path: "/map",
-            element: <Map />,
-          },
-        ],
       },
       {
         path: "sensor",
