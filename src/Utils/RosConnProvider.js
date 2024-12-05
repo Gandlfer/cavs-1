@@ -15,7 +15,11 @@ export const RosProvider = ({ children }) => {
   const [ros, setRos] = useState(null);
   const topicSubDataRef = useRef({});
   const subscribedTopics = useRef({});
-  const defaultURLRef = useRef("localhost:9090");
+  const defaultURLRef = useRef(
+    localStorage.getItem("ServerURL")
+      ? JSON.stringify(localStorage.getItem("ServerURL"))
+      : "localhost:9090"
+  );
   const [refresh, setRefresh] = useState(false);
   const [availableTopicsRefresh, setAvailableTopicsRefresh] = useState([]);
   let temp = useRef(false);
@@ -123,10 +127,18 @@ export const RosProvider = ({ children }) => {
   useEffect(() => {
     if (ros) {
       subscribeToTopics(
-        ConfigData.reduce((acc, obj) => {
-          acc[obj.name] = obj.path;
-          return acc;
-        }, {})
+        localStorage.getItem("ConfigData")
+          ? JSON.parse(localStorage.getItem("ConfigData")).reduce(
+              (acc, obj) => {
+                acc[obj.name] = obj.path;
+                return acc;
+              },
+              {}
+            )
+          : ConfigData.reduce((acc, obj) => {
+              acc[obj.name] = obj.path;
+              return acc;
+            }, {})
       );
     }
     return () => {
