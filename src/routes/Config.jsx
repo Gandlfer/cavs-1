@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import ConfigData from "../PlaceholderFiles/ConfigData";
 import ConfigTopicAvailable from "../Components/ConfigTopicAvailable";
 import { useRos } from "../Utils/RosConnProvider";
@@ -7,8 +7,13 @@ import { Slide, ToastContainer, toast } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 
 export default function Config() {
-  const { ros,defaultURLRef,resubscribeToTopics,isCon,reconnectRos } = useRos();
-  const [config, setConfig] = useState(localStorage.getItem("ConfigData") ? JSON.parse(localStorage.getItem("ConfigData")):ConfigData);
+  const { ros, defaultURLRef, resubscribeToTopics, isCon, reconnectRos } =
+    useRos();
+  const [config, setConfig] = useState(
+    localStorage.getItem("ConfigData")
+      ? JSON.parse(localStorage.getItem("ConfigData"))
+      : ConfigData
+  );
   const notify = () => toast.success("Path Saved");
 
   // Handle input changes
@@ -17,44 +22,55 @@ export default function Config() {
     updatedConfig[index].path = newPath;
     setConfig(updatedConfig);
   };
-  
-  // Save data 
+
+  // Save data
   const handleSave = () => {
     // Here you can send the `config` state to your backend or update the file
-    if (isCon){
+    if (isCon) {
       console.log("Saving Config:", config);
-      localStorage.setItem("ConfigData",JSON.stringify(config))
-      console.log(config.reduce((acc,obj) => {acc[obj.name]= obj.path; return acc},{}))
-      console.log(JSON.parse(localStorage.getItem("ConfigData")))
-      resubscribeToTopics(config.reduce((acc,obj) => {acc[obj.name]= obj.path; return acc},{}))
+      localStorage.setItem("ConfigData", JSON.stringify(config));
+      console.log(
+        config.reduce((acc, obj) => {
+          acc[obj.name] = obj.path;
+          return acc;
+        }, {})
+      );
+      console.log(JSON.parse(localStorage.getItem("ConfigData")));
+      resubscribeToTopics(
+        config.reduce((acc, obj) => {
+          acc[obj.name] = obj.path;
+          return acc;
+        }, {})
+      );
       notify();
     }
-    
   };
 
-  const handleSaveServer = () =>{
+  const handleSaveServer = () => {
     const newUrl = document.getElementById("server-path").value;
-    if (newUrl.replace("ws://","") != defaultURLRef.current){
+    if (newUrl.replace("ws://", "") != defaultURLRef.current) {
       //if (newUrl && isCon) {
-            console.log("Reconnecting to ROS at:", newUrl.replace("ws://",""));
-            reconnectRos(newUrl.replace("ws://","")); // Reconnect to ROS using the new WebSocket URL
-            notify();
-          //}
+      console.log("Reconnecting to ROS at:", newUrl.replace("ws://", ""));
+      reconnectRos(newUrl.replace("ws://", "")); // Reconnect to ROS using the new WebSocket URL
+      notify();
+      //}
     }
-    
-  }
+  };
 
   return (
     <div id="config-container" className="body">
       <div id="server-box" className="status-card">
         <span id="server-name" className="topic-name">
-          Server Address
+          Server Address:
+        </span>
+        <span id="path-prefix" className="topic-name">
+          ws://
         </span>
         <input
           id="server-path"
           className="topic-path"
           label="Server Address"
-          defaultValue={"ws://" + defaultURLRef.current}
+          defaultValue={defaultURLRef.current}
         />
         <button
           id="save-server-button"
@@ -88,7 +104,11 @@ export default function Config() {
                   <span className="topic-name" id={"light"}>
                     {val.name}
                   </span>
-                  <input className="topic-path" defaultValue={val.path} onChange={(e) => handleInputChange(key, e.target.value)}/>
+                  <input
+                    className="topic-path"
+                    defaultValue={val.path}
+                    onChange={(e) => handleInputChange(key, e.target.value)}
+                  />
                 </li>
               );
             })}
