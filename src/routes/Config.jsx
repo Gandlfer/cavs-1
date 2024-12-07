@@ -4,6 +4,7 @@ import ConfigTopicAvailable from "../Components/ConfigTopicAvailable";
 import { useRos } from "../Utils/RosConnProvider";
 import * as Io5 from "react-icons/io5";
 import toast from "react-hot-toast";
+import TopicPublishRate from "../Components/TopicPublishRate";
 
 export default function Config() {
   const { defaultURLRef, resubscribeToTopics, isCon, reconnectRos } =
@@ -112,6 +113,13 @@ export default function Config() {
         </button>
       </div>
       <ConfigTopicAvailable />
+      <div id="topics-container" className="status-card">
+      <h3 className="card-title">Topics</h3>
+      <div className="topic-list">
+        {isCon? <TopicPublishRate/> : "No websocket Connection"}
+        
+      </div>
+      </div>
     </div>
   );
 }

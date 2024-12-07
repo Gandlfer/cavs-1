@@ -41,23 +41,6 @@ export default function Status() {
         <h3 className="card-title">Topics</h3>
 
         <div className="topic-list">
-          {/* {isCon? null : <ul>
-            {TopicData.map((val, index) => {
-              return (
-                <li index={index} className="topic">
-                  <span
-                    className="topic-name"
-                    id={index % 2 == 0 ? "light" : "dark"}
-                  >
-                    {val.title}
-                  </span>
-                  <div
-                    className="topic-color"
-                    id={val.status ? "green" : "red"}
-                  />
-                </li>
-              );
-            })} */}
           {isCon ? (
             <TopicPublishRate />
           ) : (
@@ -72,7 +55,8 @@ export default function Status() {
                     onDragEnd={handleSort}
                     onDragOver={(e) => e.preventDefault()}
                   >
-                    <p className="topic">
+                    
+                    <li className="topic">
                       <span
                         className="topic-name"
                         id={index % 2 == 0 ? "light" : "dark"}
@@ -86,7 +70,8 @@ export default function Status() {
                         {val.status}
                         {/*publishRate here or modifying the above id condition*/}
                       </div>
-                    </p>
+                    </li>
+
                   </div>
                 );
               })}
