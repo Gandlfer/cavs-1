@@ -115,8 +115,8 @@ const PointCloud = () => {
       "Odometry" in subscribedTopics.current &&
       subscribedTopics.current["Point Cloud"].path in topicSubDataRef.current &&
       subscribedTopics.current["Odometry"].path in topicSubDataRef.current &&
-      "message" in
-        topicSubDataRef.current[subscribedTopics.current["Odometry"].path] &&
+      "message" in topicSubDataRef.current[subscribedTopics.current["Point Cloud"].path] &&
+      "message" in topicSubDataRef.current[subscribedTopics.current["Odometry"].path] &&
       isCon
     ) {
       const geometry = new THREE.BufferGeometry();
