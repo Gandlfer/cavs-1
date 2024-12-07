@@ -21,7 +21,13 @@ const TopicPublishRate = () => {
   useEffect(() => {
     const topicNames = Object.keys(topicSubDataRef.current);
     console.log("here");
-    setTopics(topicNames);
+    setTopics((prevTopics) => {
+      // Create a new list with topics from prevTopics and new topics added
+      const updatedTopics = [...prevTopics];
+      const newTopics = topicNames.filter((name) => !prevTopics.includes(name));
+      updatedTopics.push(...newTopics); // Add new topics while preserving order
+      return updatedTopics.filter((topic) => topicNames.includes(topic)); // Remove stale topics
+    });
   }, [refresh, updateTrigger]);
 
   const handleDragStart = (index) => {
