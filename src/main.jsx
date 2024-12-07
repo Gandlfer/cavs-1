@@ -8,6 +8,7 @@ import Status from "./routes/Status";
 import Config from "./routes/Config";
 import Navbar from "./Components/Navbar";
 import Header from "./Components/Header";
+import NotFound from "./routes/NotFound";
 import { RosProvider } from "./Utils/RosConnProvider";
 import { Toaster } from "react-hot-toast";
 
@@ -51,6 +52,11 @@ const router = createBrowserRouter([
         path: "config",
         element: <Config />,
       },
+      //404
+      {
+        path: "*",
+        element: <NotFound />,
+      }
     ],
   },
 ]);
