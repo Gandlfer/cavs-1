@@ -7,7 +7,7 @@ const NotFound = () => {
   useEffect(() => {
     //Redirect after 3 seconds
     const timer = setTimeout(() => {
-      navigate("/");
+      navigate("/config");
     }, 3000);
 
     //Disposal - JIC user leaves page first
