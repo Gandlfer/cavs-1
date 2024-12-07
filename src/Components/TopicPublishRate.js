@@ -20,7 +20,6 @@ const TopicPublishRate = () => {
 
   useEffect(() => {
     const topicNames = Object.keys(topicSubDataRef.current);
-    console.log("here");
     setTopics((prevTopics) => {
       // Create a new list with topics from prevTopics and new topics added
       const updatedTopics = [...prevTopics];
@@ -87,7 +86,6 @@ const TopicPublishRate = () => {
                       : 0
                     : 0} */}
                 </div>
-                {console.log(Object.keys(topicSubDataRef.current))}
               </li>
             );
           })

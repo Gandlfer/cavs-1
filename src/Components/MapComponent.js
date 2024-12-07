@@ -34,10 +34,6 @@ const MapComponent = () => {
       "message" in
         topicSubDataRef.current[subscribedTopics.current["Local Path"].path]
     ) {
-      // console.log("Local path");
-      // console.log(topicSubDataRef.current[localPath]);
-      // console.log("Global path");
-      //console.log(topicSubDataRef.current[globalPathTopicName].message);
 
       setGlobalPath(
         getDataArray(

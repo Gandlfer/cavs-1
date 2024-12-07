@@ -88,12 +88,10 @@ export const RosProvider = ({ children }) => {
     Object.keys(subscribedTopics.current).forEach((topicLabel) => {
       if (subscribedTopics.current[topicLabel]) {
         subscribedTopics.current[topicLabel].topicSub.unsubscribe();
-        console.log("Unsubscribing");
       }
     });
     subscribedTopics.current = {};
     topicSubDataRef.current = {};
-    console.log("Resub");
     // Subscribe to only the selected topics
     subscribeToTopics(newTopics);
   };
@@ -132,8 +130,6 @@ export const RosProvider = ({ children }) => {
           if (now - lastUpdated > 60000) {
             // Mark as inactive if no update in the last 5 seconds
             topicSubDataRef.current[topicName].pubRate = 0;
-            console.log(topicName);
-            console.log(now - lastUpdated);
           }
         }
       });
@@ -179,17 +175,13 @@ export const RosProvider = ({ children }) => {
   }, [ros]);
   if (ros != null) {
     ros.on("error", function (error) {
-      console.log("Connection Error" + error);
       setIsCon(false);
     });
     ros.on("connection", function () {
-      console.log("Connection made!");
       setIsCon(true);
       setAvailableTopics();
-      //console.log(ros);
     });
     ros.on("close", () => {
-      console.log("Connection Close!");
       setIsCon(false);
     });
   }
