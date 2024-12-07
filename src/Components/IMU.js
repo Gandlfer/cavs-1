@@ -191,6 +191,8 @@ const IMU = () => {
       isCon &&
       "Odometry" in subscribedTopics.current &&
       subscribedTopics.current["Odometry"].path in topicSubDataRef.current &&
+      "message" in
+        topicSubDataRef.current[subscribedTopics.current["Odometry"].path] &&
       vehicleRef.current
     ) {
       const { x, y, z } =
@@ -215,7 +217,15 @@ const IMU = () => {
   return (
     <div className="card" id="IMU-card">
       <h3 className="card-title"> IMU </h3>
-      <div ref={mountRef} style={{ width: "100%", height: "100%", display: "flex", justifyContent: "center"}} />
+      <div
+        ref={mountRef}
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      />
     </div>
   );
 };

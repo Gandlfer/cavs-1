@@ -12,25 +12,28 @@ const ConfigTopicAvailable = () => {
     <div className="status-card" id="config-available-card">
       <h3 className="card-title">Topics Available</h3>
       <ul id="config-available">
-        {isCon && availableTopicsRefresh.length > 0
-          ? availableTopicsRefresh.map((element) => {
-              return (
-                <li key={element} className="topic">
-                  <span className="topic-name" id={"light"}>
-                    {element}
-                  </span>
-                </li>
-              );
-            })
-          : ConfigData.map((element) => {
-              return (
-                <li key={element.name} className="topic">
-                  <span className="topic-name" id="light">
-                    {element.path}
-                  </span>
-                </li>
-              );
-            })}
+        {isCon && availableTopicsRefresh.length > 0 ? (
+          availableTopicsRefresh.map((element) => {
+            return (
+              <li key={element} className="topic">
+                <span className="topic-name" id={"light"}>
+                  {element}
+                </span>
+              </li>
+            );
+          })
+        ) : (
+          // : ConfigData.map((element) => {
+          //     return (
+          //       <li key={element.name} className="topic">
+          //         <span className="topic-name" id="light">
+          //           {element.path}
+          //         </span>
+          //       </li>
+          //     );
+          //   })
+          <div>No websocket connection.</div>
+        )}
       </ul>
     </div>
   );

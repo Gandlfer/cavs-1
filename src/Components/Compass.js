@@ -10,7 +10,9 @@ const Compass = () => {
     if (
       isCon &&
       "Odometry" in subscribedTopics.current &&
-      subscribedTopics.current["Odometry"].path in topicSubDataRef.current
+      subscribedTopics.current["Odometry"].path in topicSubDataRef.current &&
+      "message" in
+        topicSubDataRef.current[subscribedTopics.current["Odometry"].path]
     ) {
       const odomMessage =
         topicSubDataRef.current[subscribedTopics.current["Odometry"].path]

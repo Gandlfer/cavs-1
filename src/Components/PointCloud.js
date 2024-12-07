@@ -116,6 +116,8 @@ const PointCloud = () => {
       "Odometry" in subscribedTopics.current &&
       subscribedTopics.current["Point Cloud"].path in topicSubDataRef.current &&
       subscribedTopics.current["Odometry"].path in topicSubDataRef.current &&
+      "message" in
+        topicSubDataRef.current[subscribedTopics.current["Odometry"].path] &&
       isCon
     ) {
       const geometry = new THREE.BufferGeometry();
@@ -181,7 +183,15 @@ const PointCloud = () => {
   return (
     <div className="card">
       <h3 className="card-title"> Lidar </h3>
-      <div ref={mountRef} style={{ width: "100%", height: "100%", display: "flex", justifyContent: "center"}} />
+      <div
+        ref={mountRef}
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      />
     </div>
   );
 };

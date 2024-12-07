@@ -13,7 +13,9 @@ const Camera = () => {
   useEffect(() => {
     if (
       "Camera 1" in subscribedTopics.current &&
-      subscribedTopics.current["Camera 1"].path in topicSubDataRef.current
+      subscribedTopics.current["Camera 1"].path in topicSubDataRef.current &&
+      "message" in
+        topicSubDataRef.current[subscribedTopics.current["Camera 1"].path]
     ) {
       setMessageTest(
         topicSubDataRef.current[subscribedTopics.current["Camera 1"].path]
@@ -34,11 +36,7 @@ const Camera = () => {
         {" "}
         Camera from {subscribedTopics.current["Camera 1"].path}{" "}
       </h3>
-      <canvas
-        className="card-img"
-        ref={canvasRef}
-        
-      />
+      <canvas className="card-img" ref={canvasRef} />
     </div>
   );
 };
@@ -57,11 +55,10 @@ function drawCanvas(message, canvasRef, scale) {
   var byteArray = base64ToUint8Array(message.data);
   const canvas = canvasRef.current;
   const context = canvas.getContext("2d");
-  
+
   // Resize canvas
   canvas.width = message.width * scale;
   canvas.height = message.height * scale;
-
 
   var imageData = context.createImageData(message.width, message.height);
   var data = imageData.data;
@@ -73,15 +70,22 @@ function drawCanvas(message, canvasRef, scale) {
     data[canvasIndex + 2] = byteArray[i + 2]; // Blue
     data[canvasIndex + 3] = 255; // Alpha, fully opaque
   }
-  
+
   //First rendering of image
   context.putImageData(imageData, 0, 0);
 
-  
-
   //Rerender
-  context.drawImage(canvas, 0, 0, message.width, message.height, 0, 0, canvas.width, canvas.height);
-
+  context.drawImage(
+    canvas,
+    0,
+    0,
+    message.width,
+    message.height,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
 }
 
 export default Camera;
