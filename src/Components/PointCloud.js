@@ -110,7 +110,6 @@ const PointCloud = () => {
   //Pulling data from subscription
   useEffect(() => {
     //Ensure that there is data from Lidar & Odometry & an active connection is open
-    console.log();
     if (
       "Point Cloud" in subscribedTopics.current &&
       "Odometry" in subscribedTopics.current &&
@@ -153,7 +152,7 @@ const PointCloud = () => {
         new THREE.Float32BufferAttribute(colors, 3)
       );
 
-      // Material for the points
+      //Material for the points
       const material = new THREE.PointsMaterial({
         size: 1,
         vertexColors: true,
@@ -168,13 +167,13 @@ const PointCloud = () => {
         if (pointCloudRef.current.material) {
           pointCloudRef.current.material.dispose();
         }
-        pointCloudRef.current = null; // Clear the reference
+        pointCloudRef.current = null;
       }
 
       //New PC for next pass
       const pointCloud = new THREE.Points(geometry, material);
       sceneRef.current.add(pointCloud);
-      pointCloudRef.current = pointCloud; // Store reference to new point cloud
+      pointCloudRef.current = pointCloud;
     }
   }, [ros, isCon, refresh]);
 
@@ -214,8 +213,8 @@ function parsePC2Data(message, vehicleLocation) {
     //Turn intensity into a color
     const normalizedIntensity = (intensity || 0) / 255;
     const color = new THREE.Color();
-    color.setHSL(normalizedIntensity, 1.0, 0.5); // Adjust hue based on intensity
-
+    // Adjust hue based on intensity
+    color.setHSL(normalizedIntensity, 1.0, 0.5); 
     points.push({
       position: {
         x: xData - vehicleLocation.x,
