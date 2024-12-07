@@ -80,6 +80,15 @@
   text-align: start;
   color: #000;
 }
+.card-title-warn {
+  border-bottom: 2px solid rgb(255, 255, 255);
+  border-radius: 10px 10px 0 0; 
+  margin-bottom: 20px;
+  padding-left: 5px;
+  font-size: 2rem;
+  text-align: start;
+  color: #d7001d;
+}
 .card-name {
   font-size: auto;
 }

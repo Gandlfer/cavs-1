@@ -14,8 +14,8 @@ const Camera = () => {
     if (
       "Camera 1" in subscribedTopics.current &&
       subscribedTopics.current["Camera 1"].path in topicSubDataRef.current &&
-      "message" in
-        topicSubDataRef.current[subscribedTopics.current["Camera 1"].path]
+      "message" in topicSubDataRef.current[subscribedTopics.current["Camera 1"].path] &&
+      isCon
     ) {
       setMessageTest(
         topicSubDataRef.current[subscribedTopics.current["Camera 1"].path]
@@ -30,15 +30,26 @@ const Camera = () => {
     }
   }, [ros, isCon, refresh]);
 
-  return (
-    <div className="card">
-      <h3 className="card-title">
-        {" "}
-        Camera from {subscribedTopics.current["Camera 1"].path}{" "}
-      </h3>
-      <canvas className="card-img" ref={canvasRef} />
-    </div>
-  );
+  if(cameraHeight != 0 && cameraWidth != 0) {
+    return (
+      <div className="card">
+        <h3 className="card-title">
+          Camera from {subscribedTopics.current["Camera 1"].path}{" "}
+        </h3>
+        <canvas className="card-img" ref={canvasRef} />
+      </div>
+    );
+  } else {
+    return (
+      <div className="card">
+        <h3 className="card-title-warn">
+          Camera from {subscribedTopics.current["Camera 1"].path}{" "}
+        </h3>
+        <canvas className="card-img" ref={canvasRef} />
+      </div>
+    );
+  }
+  
 };
 
 //Function to convert Base64 string to byte array

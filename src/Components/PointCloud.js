@@ -5,8 +5,8 @@ import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 const PointCloud = () => {
   const { ros, isCon, refresh, topicSubDataRef, subscribedTopics } = useRos();
-  const [exist, setExist] = useState(false);
-
+  const [gotDataPC, setGDPC] = useState(false);
+  const [gotDataOd, setGDOd] = useState(false);
   const mountRef = useRef(null);
   const sceneRef = useRef(new THREE.Scene());
   const cameraRef = useRef(
@@ -109,15 +109,19 @@ const PointCloud = () => {
 
   //Pulling data from subscription
   useEffect(() => {
-    //Ensure that there is data from Lidar & Odometry & an active connection is open
-    if (
-      "Point Cloud" in subscribedTopics.current &&
-      "Odometry" in subscribedTopics.current &&
-      subscribedTopics.current["Point Cloud"].path in topicSubDataRef.current &&
+
+    //Check Odometry
+    setGDOd("Odometry" in subscribedTopics.current &&
       subscribedTopics.current["Odometry"].path in topicSubDataRef.current &&
-      "message" in topicSubDataRef.current[subscribedTopics.current["Point Cloud"].path] &&
-      "message" in topicSubDataRef.current[subscribedTopics.current["Odometry"].path] &&
-      isCon
+      "message" in topicSubDataRef.current[subscribedTopics.current["Odometry"].path]);
+    
+    //Check Point Cloud
+    setGDPC("Point Cloud" in subscribedTopics.current &&
+      subscribedTopics.current["Point Cloud"].path in topicSubDataRef.current &&
+      "message" in topicSubDataRef.current[subscribedTopics.current["Point Cloud"].path]);
+    
+    if (
+      gotDataOd && gotDataPC && isCon
     ) {
       const geometry = new THREE.BufferGeometry();
       const vertices = [];
@@ -179,20 +183,39 @@ const PointCloud = () => {
     }
   }, [ros, isCon, refresh]);
 
-  return (
-    <div className="card">
-      <h3 className="card-title"> Lidar </h3>
-      <div
-        ref={mountRef}
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      />
-    </div>
-  );
+  if (gotDataOd && gotDataPC){
+    return (
+      <div className="card">
+        <h3 className="card-title"> Lidar </h3>
+        <div
+          ref={mountRef}
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        />
+      </div>
+    );
+  }
+  else{
+    return (
+      <div className="card">
+        <h3 className="card-title-warn"> Lidar {gotDataOd? "" : "| No Odometry"} {gotDataPC? "" : "| No Pointcloud"}</h3>
+        <div
+          ref={mountRef}
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        />
+      </div>
+    );
+  }
+  
 };
 
 function parsePC2Data(message, vehicleLocation) {

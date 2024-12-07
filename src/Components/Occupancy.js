@@ -17,9 +17,15 @@ const Occupancy = () => {
       const message = topicSubDataRef.current[subscribedTopics.current["Occupancy Grid"].path].message;
       if (message && message.data) {
         let scaleFactor = 1; //Change to increase/decrease rendered camera canvas
-        drawCanvas(message, canvasRef, scaleFactor);
-        setCameraHeight(message.height * scaleFactor);
-        setCameraWidth(message.width * scaleFactor);
+        try {
+          drawCanvas(message, canvasRef, scaleFactor);
+          setCameraHeight(message.height * scaleFactor);
+          setCameraWidth(message.width * scaleFactor);
+        } catch (error) {
+          setCameraHeight(-1);
+          setCameraWidth(-1);
+        }
+        
       }
     }
   }, [ros, isCon, refresh]);
@@ -64,13 +70,21 @@ function drawCanvas(message, canvasRef, scale) {
     // Rerender
     context.drawImage(canvas, 0, 0, message.width, message.height, 0, 0, canvas.width, canvas.height);
   }
-
-  return (
-    <div className="card">
-      <h3 className="card-title"> Occupancy Grid </h3>
-      <canvas className="card-img" ref={canvasRef} />
-    </div>
-  );
+  if(cameraHeight > 0 && cameraWidth > 0) {
+    return (
+      <div className="card">
+        <h3 className="card-title"> Occupancy Grid </h3>
+        <canvas className="card-img" ref={canvasRef} />
+      </div>
+    );
+  } else {
+    return (
+      <div className="card">
+        <h3 className="card-title-warn"> Occupancy Grid {(cameraHeight < 0)? "| Bad Data" : "| No Occupancy Grid"} </h3>
+        <canvas className="card-img" ref={canvasRef} />
+      </div>
+    );
+  }
 };
 
 export default Occupancy;
