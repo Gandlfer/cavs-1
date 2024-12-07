@@ -15,6 +15,7 @@ export const RosProvider = ({ children }) => {
   const [ros, setRos] = useState(null);
   const topicSubDataRef = useRef({});
   const subscribedTopics = useRef({});
+  const inactiveTopicsRef = useRef(new Set());
   const defaultURLRef = useRef(
     localStorage.getItem("ServerURL")
       ? JSON.stringify(localStorage.getItem("ServerURL"))
@@ -51,12 +52,17 @@ export const RosProvider = ({ children }) => {
         path: topicName,
         topicSub: newTopic,
       };
+      // Mark as inactive initially
+      inactiveTopicsRef.current.add(topicName);
+
+      topicSubDataRef.current[topicName] = {};
 
       newTopic.subscribe((message) => {
-        if (!(topicName in topicSubDataRef.current)) {
-          topicSubDataRef.current[topicName] = {};
+        if (!("prevTime" in topicSubDataRef.current[topicName])) {
+          //topicSubDataRef.current[topicName] = {};
           topicSubDataRef.current[topicName].prevTime = Date.now();
           topicSubDataRef.current[topicName].pubRate = 0;
+          //topicSubDataRef.current[topicName].pubRate = 0;
         } else {
           let rate =
             1 /
@@ -112,6 +118,28 @@ export const RosProvider = ({ children }) => {
     setLoading(false);
   };
 
+  // Check for topics with no data periodically
+  if (isCon) {
+    setInterval(() => {
+      const now = Date.now();
+      Object.keys(topicSubDataRef.current).forEach((topicName) => {
+        if (!("prevTime" in topicSubDataRef.current[topicName])) {
+          //topicSubDataRef.current[topicName].prevTime = Date.now();
+          topicSubDataRef.current[topicName].pubRate = 0;
+        } else {
+          const lastUpdated = topicSubDataRef.current[topicName].prevTime;
+
+          if (now - lastUpdated > 60000) {
+            // Mark as inactive if no update in the last 5 seconds
+            topicSubDataRef.current[topicName].pubRate = 0;
+            console.log(topicName);
+            console.log(now - lastUpdated);
+          }
+        }
+      });
+    }, 60000);
+  }
+
   useEffect(() => {
     function connection() {
       setLoading(true);
@@ -165,6 +193,7 @@ export const RosProvider = ({ children }) => {
       setIsCon(false);
     });
   }
+
   return (
     <RosContext.Provider
       value={{
