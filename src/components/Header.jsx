@@ -6,6 +6,7 @@ import { useRos } from "../Utils/RosConnProvider";
 import ROSLIB from "roslib";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
+import toast from "react-hot-toast";
 
 export default function Header() {
   const { ros, isCon, refresh } = useRos();
@@ -14,11 +15,9 @@ export default function Header() {
     ros: ros,
     name: "/global_path_node/shutdown_behavior",
   });
-  const buttonPress = () => {
-    rosParam.get((value) => {
-      console.log(value);
-    });
-  };
+
+  const notify = (message) => toast.success(message);
+  
   const submit = () => {
     confirmAlert({
       title: "Confirm Shutdown",
@@ -26,11 +25,11 @@ export default function Header() {
       buttons: [
         {
           label: "Shutdown",
-          //onClick: () => alert("Click No"),
+          onClick: () => notify("Shutdown command sent!")
         },
         {
           label: "Resume",
-          //onClick: () => alert("Exiting"),
+          onClick: () => notify("Playing")
         },
       ],
     });
