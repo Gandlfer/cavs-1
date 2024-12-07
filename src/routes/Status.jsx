@@ -1,7 +1,11 @@
+/* This is a component meant to contain a faux console, rosbag interface, and Topic refresh rate.
+   Unfortunatly we did not have the time/scope/power to implement the required APIs for the former.
+   The Topic refresh is viewable on the Config page.
+*/
+
 import React, { useEffect, useRef, useState } from "react";
 import Card from "../Components/Card";
 import TopicPublishRate from "../Components/TopicPublishRate";
-//import TopicData from "../PlaceholderFiles/TopicData";
 import { useRos } from "../Utils/RosConnProvider";
 import TopicData from "../PlaceholderFiles/TopicData.json";
 

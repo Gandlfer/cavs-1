@@ -58,6 +58,7 @@ export default function Navbar() {
                 <span id="nav-span">Sensor</span>
               </Link>
             </li>
+            {/* Component archived: implementation requires command execution on react server device & roslaunch device.
             <li
               className={
                 splitLocation[1] === "status" ? "nav-text active" : "nav-text"
@@ -69,7 +70,7 @@ export default function Navbar() {
                 </span>
                 <span id="nav-span">Status</span>
               </Link>
-            </li>
+            </li> */}
             <li
               className={
                 splitLocation[1] === "config" ? "nav-text active" : "nav-text"

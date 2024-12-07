@@ -15,8 +15,8 @@ const AppLayout = () => (
   <div className="container">
     <Toaster position="top-center" toastOptions={{
           style: {
-            fontSize: '13px',  // Smaller font size
-            padding: '8px 12px',  // Adjust padding for a smaller overall size
+            fontSize: '13px', 
+            padding: '8px 12px',
           }
           
         }}/>
@@ -41,10 +41,12 @@ const router = createBrowserRouter([
         path: "sensor",
         element: <Sensor />,
       },
-      {
-        path: "status",
-        element: <Status />,
-      },
+      // Removed - Console and Rosbag functionality requires an API to interact with the server(s).
+      // One for host device, one for device running rosbridge.
+      // {
+      //   path: "status",
+      //   element: <Status />,
+      // },
       {
         path: "config",
         element: <Config />,
@@ -60,9 +62,4 @@ export const Router = () => {
     </RosProvider>
   );
 };
-//entry point
-// ReactDOM.createRoot(document.getElementById("root")).render(
-//   <React.StrictMode>
-//     <RouterProvider router={router} />
-//   </React.StrictMode>
-// );
+
