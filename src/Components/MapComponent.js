@@ -28,7 +28,11 @@ const MapComponent = () => {
       "Local Path" in subscribedTopics.current &&
       "Global Path" in subscribedTopics.current &&
       subscribedTopics.current["Local Path"].path in topicSubDataRef.current &&
-      subscribedTopics.current["Global Path"].path in topicSubDataRef.current
+      subscribedTopics.current["Global Path"].path in topicSubDataRef.current &&
+      "message" in
+        topicSubDataRef.current[subscribedTopics.current["Global Path"].path] &&
+      "message" in
+        topicSubDataRef.current[subscribedTopics.current["Local Path"].path]
     ) {
       // console.log("Local path");
       // console.log(topicSubDataRef.current[localPath]);
@@ -44,7 +48,9 @@ const MapComponent = () => {
     }
     if (
       "Odometry" in subscribedTopics.current &&
-      subscribedTopics.current["Odometry"].path in topicSubDataRef.current
+      subscribedTopics.current["Odometry"].path in topicSubDataRef.current &&
+      "message" in
+        topicSubDataRef.current[subscribedTopics.current["Odometry"].path]
     ) {
       // console.log(
       //   topicSubDataRef.current[testTopicName].message.pose.pose.position
