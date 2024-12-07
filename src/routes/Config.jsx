@@ -52,7 +52,7 @@ export default function Config() {
   return (
 
     <div id="config-container" className="body">
-      <div id="server-box" className="status-card">
+      <div id="server-box" className="server-card">
         <span id="server-name" className="topic-name">
           Server Address:
         </span>

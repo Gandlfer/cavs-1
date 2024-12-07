@@ -54,16 +54,15 @@
   transition: 450ms;
   margin-left: 0ms;
 }
-/*Temporary content cards*/
 .card {
   flex-grow: 1;
   min-height: 300px;
   height: auto;
   width: auto;
-  min-width: 20vw;
-  max-width: 50vw;
+  min-width: 30vw;
+  max-width: 40vw;
   background-color: #acacac;
-  border: 1px solid rgb(0, 0, 0);
+  border: 2px solid rgb(0, 0, 0);
   border-radius: 10px;
   display: inline-flexbox;
   padding: 2px;
@@ -241,12 +240,26 @@
   color: white;
 }
 
-
-.status-card{
-  border: 1px solid black;
+.server-card{
+  border: 2px solid black;
   border-radius: 10px;
   background-color: #acacac;
-  height: 80vh;
+  height: 75vh;
+  width: 20vw;
+  min-width: 350px;
+  flex-grow: 1;
+  margin-bottom: 10px;
+  font-size: large;
+  align-content: flex-start;
+  padding: 2px;
+  display: inline-block;
+  position: relative;
+}
+.status-card{
+  border: 2px solid black;
+  border-radius: 10px;
+  background-color: #acacac;
+  height: 75vh;
   width: 20vw;
   min-width: 350px;
   flex-grow: 1;

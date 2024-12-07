@@ -22,7 +22,7 @@ const Camera = () => {
           .message
       );
       if (Object.keys(messageTest).length > 0) {
-        let scaleFactor = 2; //Change to increase/decrease rendered camera canvas
+        let scaleFactor = 1.5; //Change to increase/decrease rendered camera canvas
         drawCanvas(messageTest, canvasRef, scaleFactor);
         setCameraHeight(messageTest.height * scaleFactor);
         setCameraWidth(messageTest.width * scaleFactor);

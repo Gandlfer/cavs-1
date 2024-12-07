@@ -33,6 +33,17 @@ export default function Sensor() {
       )}
 
       {isCon ? (
+        <IMU />
+      ) : (
+        <div className="card" id="IMU-card">
+          <h3 className="card-title"> IMU </h3>
+          <div>
+            No websocket connection.
+          </div>
+        </div>
+      )}
+
+      {isCon ? (
         <Compass />
       ) : (
         <div className="card" id="compass-card">
@@ -43,16 +54,6 @@ export default function Sensor() {
         </div>
       )}
 
-      {isCon ? (
-        <IMU />
-      ) : (
-        <div className="card" id="IMU-card">
-          <h3 className="card-title"> IMU </h3>
-          <div>
-            No websocket connection.
-          </div>
-        </div>
-      )}
     </div>
   );
 }
