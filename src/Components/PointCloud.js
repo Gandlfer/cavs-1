@@ -10,7 +10,7 @@ const PointCloud = () => {
   const mountRef = useRef(null);
   const sceneRef = useRef(new THREE.Scene());
   const cameraRef = useRef(
-    new THREE.PerspectiveCamera(75, 500 / 500, 0.1, 1000)
+    new THREE.PerspectiveCamera(75, 400 / 400, 0.1, 1000)
   );
 
   const rendererRef = useRef(null);
@@ -24,8 +24,8 @@ const PointCloud = () => {
     //Only create a renderer if we do not currently have one.
     if (!rendererRef.current) {
       rendererRef.current = new THREE.WebGLRenderer({ antialias: true });
-      rendererRef.current.setSize(500, 500);
-      cameraRef.current.aspect = 500 / 500;
+      rendererRef.current.setSize(400, 400);
+      cameraRef.current.aspect = 400 / 400;
       cameraRef.current.updateProjectionMatrix();
       mountRef.current.appendChild(rendererRef.current.domElement);
     }

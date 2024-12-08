@@ -11,9 +11,14 @@ export default function Map() {
   const { isCon } = useRos();
   return (
     <div id="map-tab" className="body">
-      <div id="map" className="card">
+      {isCon ? (
         <MapComponent />
-      </div>
+      ) : (
+        <div className="card">
+          <h3 className="card-title"> Global Path </h3>
+          <p> No websocket connection.</p>
+        </div>
+      )}
       {isCon ? (
         <PointCloud />
       ) : (
