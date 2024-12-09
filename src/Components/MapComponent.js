@@ -26,7 +26,9 @@ const MapComponent = () => {
   const rendererRef = useRef(null);
   const controlsRef = useRef(null);
   const movingSphereRef = useRef(null);
-  const globalPathRef = useRef(null);
+  const globalPathLineRef = useRef(null);
+  const globalPathPointRef = useRef(null);
+
   const getDataArray = (arr) => {
     return arr.map((obj) => [
       obj.pose.position.x,
@@ -53,8 +55,8 @@ const MapComponent = () => {
     }
 
     //Camera things
-    cameraRef.current.position.set(0, 0, 100);
-    cameraRef.current.lookAt(0, 0, 0);
+    cameraRef.current.position.set(0, 0, 215);
+    //cameraRef.current.lookAt(0, 0, 0);
 
     // Add ambient light for visibility
     const light = new THREE.AmbientLight(0xffffff, 0.5);
@@ -70,19 +72,29 @@ const MapComponent = () => {
         cameraRef.current,
         rendererRef.current.domElement
       );
-      controlsRef.current.enableDamping = true; 
+      controlsRef.current.enableDamping = true;
       controlsRef.current.dampingFactor = 0.25;
-      controlsRef.current.screenSpacePanning = true; 
+      // controlsRef.current.screenSpacePanning = false;
+      controlsRef.current.enablePan = true;
+      controlsRef.current.enableRotate = false;
     }
 
+    // Inside the initial setup (first useEffect)
+    const sphereGroup = new THREE.Group(); // Group for spheres
+    sceneRef.current.add(sphereGroup);
+    globalPathPointRef.current = sphereGroup; // Store the reference
+
     //Create the moving sphere
-    const sphereGeometry = new THREE.SphereGeometry(1, 16, 16);
-    const sphereMaterial = new THREE.MeshStandardMaterial({
-      color: 0x00ff00, // Green
-    });
-    const movingSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    sceneRef.current.add(movingSphere);
-    movingSphereRef.current = movingSphere;
+    if (!movingSphereRef.current) {
+      const sphereGeometry = new THREE.SphereGeometry(5, 16, 16);
+      const sphereMaterial = new THREE.MeshStandardMaterial({
+        color: 0x00ff00, // Green
+      });
+
+      const movingSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+      sceneRef.current.add(movingSphere);
+      movingSphereRef.current = movingSphere;
+    }
 
     //Disposal
     return () => {
@@ -117,9 +129,13 @@ const MapComponent = () => {
   }, []);
 
   useEffect(() => {
-  setGotDataGP("Global Path" in subscribedTopics.current &&
-      subscribedTopics.current["Global Path"].path in topicSubDataRef.current &&
-      "message" in topicSubDataRef.current[subscribedTopics.current["Global Path"].path]);
+    setGotDataGP(
+      "Global Path" in subscribedTopics.current &&
+        subscribedTopics.current["Global Path"].path in
+          topicSubDataRef.current &&
+        "message" in
+          topicSubDataRef.current[subscribedTopics.current["Global Path"].path]
+    );
 
     if (gotDataGP && isCon) {
       const pathData = getDataArray(
@@ -128,14 +144,25 @@ const MapComponent = () => {
       );
       //Add points and lines for the global path
       if (pathData.length > 0) {
+        // Clear existing global path objects
+        if (globalPathPointRef.current) {
+          globalPathPointRef.current.children.forEach((child) => {
+            sceneRef.current.remove(child);
+            if (child.geometry) child.geometry.dispose();
+            if (child.material) child.material.dispose();
+          });
+          globalPathPointRef.current.clear();
+        }
+
         //Create spheres for poses
-        const sphereGeometry = new THREE.SphereGeometry(0.5, 16, 16);
+        const sphereGeometry = new THREE.SphereGeometry(2, 16, 16);
         const sphereMaterial = new THREE.MeshStandardMaterial({
           color: 0xffff00,
         });
         pathData.forEach((pose) => {
           const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
           sphere.position.set(...pose);
+          globalPathPointRef.current.add(sphere);
           sceneRef.current.add(sphere);
         });
 
@@ -145,11 +172,22 @@ const MapComponent = () => {
           pathData.map((pose) => new THREE.Vector3(...pose))
         );
         const line = new THREE.Line(lineGeometry, lineMaterial);
-        sceneRef.current.line;
+
+        //Memory clearing
+        if (globalPathLineRef.current) {
+          sceneRef.current.remove(globalPathLineRef.current);
+          if (sceneRef.current.line) {
+            sceneRef.current.line.dispose();
+          }
+
+          globalPathLineRef.current = null;
+        }
+
         sceneRef.current.add(line);
-        globalPathRef.current = line;
+        globalPathLineRef.current = line;
       }
     }
+
     if (
       "Odometry" in subscribedTopics.current &&
       subscribedTopics.current["Odometry"].path in topicSubDataRef.current &&
@@ -157,13 +195,13 @@ const MapComponent = () => {
         topicSubDataRef.current[subscribedTopics.current["Odometry"].path]
     ) {
       if (movingSphereRef.current) {
-        movingSphereRef.current.position.set(
+        const position =
           topicSubDataRef.current[subscribedTopics.current["Odometry"].path]
-            .message.pose.pose.position.x,
-          topicSubDataRef.current[subscribedTopics.current["Odometry"].path]
-            .message.pose.pose.position.y,
-          0
-        );
+            .message.pose.pose.position;
+        movingSphereRef.current.position.set(position.x, position.y, 0);
+
+        cameraRef.current.lookAt(position.x, position.y, 0);
+        cameraRef.current.position.set(position.x, position.y, 215);
       }
     }
   }, [ros, isCon, refresh]);
@@ -190,7 +228,7 @@ const MapComponent = () => {
     };
   }, []);
 
-  if(gotDataGP){
+  if (gotDataGP) {
     return (
       <div className="card" id="Global Path">
         <h3 className="card-title"> Global Path </h3>
