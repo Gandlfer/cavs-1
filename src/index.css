@@ -95,6 +95,19 @@
   max-width:100%;
   object-fit: scale-down;
 }
+.card-Occupancy {
+  flex-grow: 0;
+  min-height: 400px;
+  height: 575px;
+  width: 500px;
+  background-color: #acacac;
+  border: 2px solid rgb(0, 0, 0);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  position: relative;
+  margin: 10px;
+}
 .card-IMU {
   flex-grow: 0;
   min-height: 400px;

@@ -16,7 +16,7 @@ const Occupancy = () => {
     ) {
       const message = topicSubDataRef.current[subscribedTopics.current["Occupancy Grid"].path].message;
       if (message && message.data) {
-        let scaleFactor = 1; //Change to increase/decrease rendered camera canvas
+        let scaleFactor = 1; //Change to increase/decrease rendered camera canvas (Only works for >1)
         try {
           drawCanvas(message, canvasRef, scaleFactor);
           setCameraHeight(message.height * scaleFactor);
@@ -72,14 +72,14 @@ function drawCanvas(message, canvasRef, scale) {
   }
   if(cameraHeight > 0 && cameraWidth > 0) {
     return (
-      <div className="card">
+      <div className="card-Occupancy">
         <h3 className="card-title"> Occupancy Grid </h3>
         <canvas className="card-img" ref={canvasRef} />
       </div>
     );
   } else {
     return (
-      <div className="card">
+      <div className="card-Occupancy">
         <h3 className="card-title-warn"> Occupancy Grid {(cameraHeight < 0)? "| Bad Data" : "| No Occupancy Grid"} </h3>
         <canvas className="card-img" ref={canvasRef} />
       </div>
