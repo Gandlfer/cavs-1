@@ -3,9 +3,9 @@ import { useEffect, useState, useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 
-const MapComponent = () => {
-  const [globalPath, setGlobalPath] = useState([]);
+const GlobalPath = () => {
   const [gotDataGP, setGotDataGP] = useState(false);
+  const [lastData, setLastData] = useState([[]]);
   const { ros, isCon, topicSubDataRef, refresh, subscribedTopics } = useRos();
 
   const mountRef = useRef(null);
@@ -63,11 +63,9 @@ const MapComponent = () => {
         cameraRef.current,
         rendererRef.current.domElement
       );
-      controlsRef.current.enableDamping = true;
+      controlsRef.current.enableDamping = true; // Smooth transitions
       controlsRef.current.dampingFactor = 0.25;
-      // controlsRef.current.screenSpacePanning = false;
-      controlsRef.current.enablePan = true;
-      controlsRef.current.enableRotate = false;
+      controlsRef.current.screenSpacePanning = true; // Is this needed?
     }
 
     // Inside the initial setup (first useEffect)
@@ -79,7 +77,7 @@ const MapComponent = () => {
     if (!movingSphereRef.current) {
       const sphereGeometry = new THREE.SphereGeometry(5, 16, 16);
       const sphereMaterial = new THREE.MeshStandardMaterial({
-        color: 0x00ff00, // Green
+        color: 0x21A9FF, // Light Blue
       });
 
       const movingSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
@@ -128,13 +126,30 @@ const MapComponent = () => {
           topicSubDataRef.current[subscribedTopics.current["Global Path"].path]
     );
 
+    //Only plot data if there is a server connection & data is streaming
     if (gotDataGP && isCon) {
       const pathData = getDataArray(
-        topicSubDataRef.current[subscribedTopics.current["Global Path"].path]
-          .message.poses
+        topicSubDataRef.current[subscribedTopics.current["Global Path"].path].message.poses
       );
+    
+      //We only want to redraw the GP if the data is fresh. 
+      let newData = lastData.length != pathData.length;
+      
+      //If two different datasizes, and lastData is not size 0
+      if (!newData && lastData.length > 0) {
+        for(let i = 0; i < lastData.length; i++){
+          if (lastData[i][0] != pathData[i][0] || lastData[i][1] != pathData[i][1] || lastData[i][2] != pathData[i][2]) {
+            newData = true;
+            break;
+          }
+        }
+      }
+
+
       //Add points and lines for the global path
-      if (pathData.length > 0) {
+      if (pathData.length > 0 && newData) {
+        setLastData(pathData);
+
         // Clear existing global path objects
         if (globalPathPointRef.current) {
           globalPathPointRef.current.children.forEach((child) => {
@@ -146,10 +161,9 @@ const MapComponent = () => {
         }
 
         //Create spheres for poses
-        const sphereGeometry = new THREE.SphereGeometry(2, 16, 16);
-        const sphereMaterial = new THREE.MeshStandardMaterial({
-          color: 0xffff00,
-        });
+        const sphereGeometry = new THREE.SphereGeometry(1, 16, 16);
+        const sphereMaterial = new THREE.MeshStandardMaterial({color: 0xFFFF00});
+        
         pathData.forEach((pose) => {
           const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
           sphere.position.set(...pose);
@@ -191,8 +205,9 @@ const MapComponent = () => {
             .message.pose.pose.position;
         movingSphereRef.current.position.set(position.x, position.y, 0);
 
-        cameraRef.current.lookAt(position.x, position.y, 0);
-        cameraRef.current.position.set(position.x, position.y, 215);
+        //If you want the camera to constantly snap to the vehicle's location
+        //cameraRef.current.lookAt(position.x, position.y, 0);
+        //cameraRef.current.position.set(position.x, position.y, 215);
       }
     }
   }, [ros, isCon, refresh]);
@@ -251,4 +266,5 @@ const MapComponent = () => {
     );
   }
 };
-export default MapComponent;
+
+export default GlobalPath;

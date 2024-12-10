@@ -2,14 +2,23 @@ import React from "react";
 import PointCloud from "../Components/PointCloud";
 import Occupancy from "../Components/Occupancy"
 import { useRos } from "../Utils/RosConnProvider";
-import MapComponent from "../Components/MapComponent";
+import Waypoints from "../Components/Waypoints";
+import GlobalPath from "../Components/GlobalPath";
 
 export default function Map() {
   const { isCon } = useRos();
   return (
     <div id="map-tab" className="body">
       {isCon ? (
-        <MapComponent />
+        <GlobalPath />
+      ) : (
+        <div className="card">
+          <h3 className="card-title"> Global Path </h3>
+          <p> No websocket connection.</p>
+        </div>
+      )}
+      {isCon ? (
+        <Waypoints />
       ) : (
         <div className="card">
           <h3 className="card-title"> Global Path </h3>
