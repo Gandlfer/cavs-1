@@ -95,6 +95,39 @@
   max-width:100%;
   object-fit: scale-down;
 }
+.card-IMU {
+  flex-grow: 0;
+  min-height: 400px;
+  height: auto;
+  width: auto;
+  max-width: 65vw;
+  background-color: #acacac;
+  border: 2px solid rgb(0, 0, 0);
+  border-radius: 10px;
+  display: inline-flexbox;
+  padding: 2px;
+  text-align: center;
+  position: relative;
+  margin: 10px;
+}
+.IMU-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  padding: 10;
+  margin: 0;
+  width:min-content;
+}
+.IMU-label {
+  margin-bottom: 10px;
+  padding-left: 5px;
+  font-size: 2.5rem;
+  text-align: center;
+  color: #000;
+}
 .sample-img{
   border: 1px solid green;
   height: 350px;

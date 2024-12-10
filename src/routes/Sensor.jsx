@@ -11,26 +11,6 @@ export default function Sensor() {
 
   return (
     <div id="sensor-tab" className="body">
-      {isCon ? (
-        <Camera />
-      ) : (
-        <div className="card">
-          <h3 className="card-title"> Camera </h3>
-          <div>
-            No websocket connection.
-          </div>
-        </div>
-      )}
-      {isCon ? (
-        <PointCloud />
-      ) : (
-        <div className="card">
-          <h3 className="card-title"> Lidar </h3>
-          <div>
-            No websocket connection.
-          </div>
-        </div>
-      )}
 
       {isCon ? (
         <IMU />
@@ -43,6 +23,28 @@ export default function Sensor() {
         </div>
       )}
 
+      {isCon ? (
+        <PointCloud />
+      ) : (
+        <div className="card">
+          <h3 className="card-title"> Lidar </h3>
+          <div>
+            No websocket connection.
+          </div>
+        </div>
+      )}
+
+      {isCon ? (
+        <Camera />
+      ) : (
+        <div className="card">
+          <h3 className="card-title"> Camera </h3>
+          <div>
+            No websocket connection.
+          </div>
+        </div>
+      )}
+      
       {isCon ? (
         <Compass />
       ) : (
