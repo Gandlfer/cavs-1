@@ -1,11 +1,10 @@
 import "../index.css";
-import { IconContext } from "react-icons";
 import * as Io5 from "react-icons/io5";
 import ControllerButton from "./ControllerButtons";
 import { useRos } from "../Utils/RosConnProvider";
 import ROSLIB from "roslib";
 import { confirmAlert } from "react-confirm-alert";
-import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
+import "react-confirm-alert/src/react-confirm-alert.css";
 import toast from "react-hot-toast";
 
 export default function Header() {

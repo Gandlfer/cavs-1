@@ -1,12 +1,3 @@
-import { polyline1 } from "../PlaceholderFiles/MapData.jsx";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  Polyline,
-  SVGOverlay,
-} from "react-leaflet";
 import { useRos } from "../Utils/RosConnProvider.js";
 import { useEffect, useState, useRef } from "react";
 import * as THREE from "three";
@@ -20,7 +11,7 @@ const MapComponent = () => {
   const mountRef = useRef(null);
   const sceneRef = useRef(new THREE.Scene());
   const cameraRef = useRef(
-    new THREE.PerspectiveCamera(75, 400 / 400, 0.1, 1000) //Here
+    new THREE.PerspectiveCamera(75, 400 / 400, 0.1, 1000)
   );
 
   const rendererRef = useRef(null);

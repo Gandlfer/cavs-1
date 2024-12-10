@@ -1,9 +1,6 @@
 import React from "react";
 import PointCloud from "../Components/PointCloud";
 import Occupancy from "../Components/Occupancy"
-import Card from "../Components/Card";
-import "../index.css";
-import "./Map.css";
 import { useRos } from "../Utils/RosConnProvider";
 import MapComponent from "../Components/MapComponent";
 

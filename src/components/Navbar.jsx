@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import * as Io5 from "react-icons/io5";
 import * as Gr from "react-icons/gr";
-import { NavLink, Link, useLocation } from "react-router-dom";
-import { SidebarData } from "./SidebarData";
+import { Link, useLocation } from "react-router-dom";
 import "../index.css";
 import { IconContext } from "react-icons";
 import { useRos } from "../Utils/RosConnProvider";
-import ROSLIB from "roslib";
 import ControllerButton from "./ControllerButtons";
 import toast from "react-hot-toast";
 
@@ -20,7 +18,6 @@ export default function Navbar() {
   const notifyPause = () => toast.success("Paused");
   return (
     <>
-      {/* <TestComponent></TestComponent> */}
       <IconContext.Provider value={{ color: "undefined" }}>
         <div className="navbar">
           <Link to="#" className="menu-bar">
@@ -58,19 +55,6 @@ export default function Navbar() {
                 <span id="nav-span">Sensor</span>
               </Link>
             </li>
-            {/* Component archived: implementation requires command execution on react server device & roslaunch device.
-            <li
-              className={
-                splitLocation[1] === "status" ? "nav-text active" : "nav-text"
-              }
-            >
-              <Link to="/status">
-                <span id="nav-span">
-                  <Io5.IoTerminal />
-                </span>
-                <span id="nav-span">Status</span>
-              </Link>
-            </li> */}
             <li
               className={
                 splitLocation[1] === "config" ? "nav-text active" : "nav-text"

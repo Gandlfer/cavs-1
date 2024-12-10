@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import "../index.css";
 import { useRos } from "../Utils/RosConnProvider.js";
 
 const Camera = () => {

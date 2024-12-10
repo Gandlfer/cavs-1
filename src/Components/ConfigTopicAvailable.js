@@ -1,7 +1,5 @@
-import { useState, createContext, useContext, useEffect, useRef } from "react";
-import ROSLIB from "roslib";
+import { useEffect } from "react";
 import { useRos } from "../Utils/RosConnProvider.js";
-import ConfigData from "../PlaceholderFiles/ConfigData.jsx";
 
 const ConfigTopicAvailable = () => {
   const { ros, isCon, availableTopicsRefresh } = useRos();
@@ -23,15 +21,6 @@ const ConfigTopicAvailable = () => {
             );
           })
         ) : (
-          // : ConfigData.map((element) => {
-          //     return (
-          //       <li key={element.name} className="topic">
-          //         <span className="topic-name" id="light">
-          //           {element.path}
-          //         </span>
-          //       </li>
-          //     );
-          //   })
           <div>No websocket connection.</div>
         )}
       </ul>
