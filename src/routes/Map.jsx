@@ -21,7 +21,7 @@ export default function Map() {
         <Waypoints />
       ) : (
         <div className="card">
-          <h3 className="card-title"> Global Path </h3>
+          <h3 className="card-title"> Waypoints </h3>
           <p> No websocket connection.</p>
         </div>
       )}
