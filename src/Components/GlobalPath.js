@@ -162,7 +162,7 @@ const GlobalPath = () => {
         }
 
         //Create spheres for poses
-        const sphereGeometry = new THREE.SphereGeometry(1, 16, 16);
+        const sphereGeometry = new THREE.SphereGeometry(2, 16, 16);
         const sphereMaterial = new THREE.MeshStandardMaterial({color: 0xFFFF00});
         
         pathData.forEach((pose) => {
