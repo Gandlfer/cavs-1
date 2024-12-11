@@ -26,7 +26,7 @@ const Compass = () => {
 
   if (heading){
     return (
-      <div className="card">
+      <div className="card" id="Compass-card">
         <h3 className="card-title"> Compass </h3>
         <div style={{ width: "100%", height: "100%" }}>
           <p>{`Heading: ${heading.toFixed(2)}°`}</p>
@@ -37,8 +37,8 @@ const Compass = () => {
   }
   else {
     return (
-      <div className="card">
-        <h3 className="card-title-warn"> Compass | No Odometry </h3>
+      <div className="card" id="Compass-card">
+        <h3 className="card-title-error"> Compass | No Odometry </h3>
         <div style={{ width: "100%", height: "100%" }}>
           <p>No data from {subscribedTopics.current["Odometry"].path}</p>
         </div>

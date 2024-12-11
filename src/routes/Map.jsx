@@ -12,7 +12,7 @@ export default function Map() {
       {isCon ? (
         <GlobalPath />
       ) : (
-        <div className="card">
+        <div className="card" id="Global-Path-card">
           <h3 className="card-title"> Global Path </h3>
           <p> No websocket connection.</p>
         </div>
@@ -20,7 +20,7 @@ export default function Map() {
       {isCon ? (
         <Waypoints />
       ) : (
-        <div className="card">
+        <div className="card" id="Waypoint-card">
           <h3 className="card-title"> Waypoints </h3>
           <p> No websocket connection.</p>
         </div>
@@ -28,7 +28,7 @@ export default function Map() {
       {isCon ? (
         <PointCloud />
       ) : (
-        <div className="card">
+        <div className="card" id="PointCloud-card">
           <h3 className="card-title"> Lidar </h3>
           <p> No websocket connection.</p>
         </div>
@@ -36,7 +36,7 @@ export default function Map() {
       {isCon ? (
         <Occupancy />
       ) : (
-        <div className="card">
+        <div className="card" id="Occupancy-card">
           <h3 className="card-title"> Occupancy Grid </h3>
           <p> No websocket connection.</p>
         </div>

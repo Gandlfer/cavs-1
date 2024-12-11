@@ -31,7 +31,7 @@ const Camera = () => {
 
   if(cameraHeight != 0 && cameraWidth != 0) {
     return (
-      <div className="card">
+      <div className="card" id="Camera-card">
         <h3 className="card-title">
           Camera from {subscribedTopics.current["Camera 1"].path}{" "}
         </h3>
@@ -40,8 +40,8 @@ const Camera = () => {
     );
   } else {
     return (
-      <div className="card">
-        <h3 className="card-title-warn">
+      <div className="card" id="Camera-card">
+        <h3 className="card-title-error">
           Camera from {subscribedTopics.current["Camera 1"].path}{" "}
         </h3>
         <canvas className="card-img" ref={canvasRef} />

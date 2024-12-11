@@ -185,7 +185,7 @@ const PointCloud = () => {
 
   if (gotDataOd && gotDataPC){
     return (
-      <div className="card">
+      <div className="card" id="PointCloud-card">
         <h3 className="card-title"> Lidar </h3>
         <div
           ref={mountRef}
@@ -201,8 +201,8 @@ const PointCloud = () => {
   }
   else{
     return (
-      <div className="card">
-        <h3 className="card-title-warn"> Lidar {gotDataOd? "" : "| No Odometry"} {gotDataPC? "" : "| No Pointcloud"}</h3>
+      <div className="card" id="PointCloud-card">
+        <h3 className="card-title-error"> Lidar {gotDataOd? "" : "| No Odometry"} {gotDataPC? "" : "| No Pointcloud"}</h3>
         <div
           ref={mountRef}
           style={{

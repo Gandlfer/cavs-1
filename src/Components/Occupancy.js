@@ -80,7 +80,7 @@ function drawCanvas(message, canvasRef, scale) {
   } else {
     return (
       <div className="card-Occupancy">
-        <h3 className="card-title-warn"> Occupancy Grid {(cameraHeight < 0)? "| Bad Data" : "| No Occupancy Grid"} </h3>
+        <h3 className="card-title-error"> Occupancy Grid {(cameraHeight < 0)? "| Bad Data" : "| No Occupancy Grid"} </h3>
         <canvas className="card-img" ref={canvasRef} />
       </div>
     );

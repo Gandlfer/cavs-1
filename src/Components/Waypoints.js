@@ -5,6 +5,7 @@ import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 const Waypoints = () => {
   const [gotDataWP, setGotDataWP] = useState(false);
+  const [gotDataOd, setGotDataOd] = useState(false);
   const [lastData, setLastData] = useState([[]]);
   const { ros, isCon, topicSubDataRef, refresh, subscribedTopics } = useRos();
 
@@ -194,12 +195,11 @@ const Waypoints = () => {
       }
     }
 
-    if (
-      "Odometry" in subscribedTopics.current &&
+    setGotDataOd("Odometry" in subscribedTopics.current &&
       subscribedTopics.current["Odometry"].path in topicSubDataRef.current &&
-      "message" in
-        topicSubDataRef.current[subscribedTopics.current["Odometry"].path]
-    ) {
+      "message" in topicSubDataRef.current[subscribedTopics.current["Odometry"].path])
+
+    if (gotDataOd) {
       if (movingSphereRef.current) {
         const position =
           topicSubDataRef.current[subscribedTopics.current["Odometry"].path]
@@ -235,10 +235,25 @@ const Waypoints = () => {
     };
   }, []);
 
-  if (gotDataWP) {
+  if (gotDataWP && gotDataOd) {
     return (
-      <div className="card" id="Waypoints">
+      <div className="card" id="Waypoint-card">
         <h3 className="card-title"> Waypoints </h3>
+        <div
+          ref={mountRef}
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        />
+      </div>
+    );
+  } else if(!gotDataWP) {
+    return (
+      <div className="card" id="Waypoint-card">
+        <h3 className="card-title-error"> Waypoints | No Waypoints </h3>
         <div
           ref={mountRef}
           style={{
@@ -252,8 +267,8 @@ const Waypoints = () => {
     );
   } else {
     return (
-      <div className="card" id="IMU-card">
-        <h3 className="card-title-warn"> Waypoints | No Waypoints </h3>
+      <div className="card" id="Waypoint-card">
+        <h3 className="card-title-warn"> Waypoints | No Odometry </h3>
         <div
           ref={mountRef}
           style={{

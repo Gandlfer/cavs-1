@@ -5,6 +5,7 @@ import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 const GlobalPath = () => {
   const [gotDataGP, setGotDataGP] = useState(false);
+  const [gotDataOd, setGotDataOd] = useState(false);
   const [lastData, setLastData] = useState([[]]);
   const { ros, isCon, topicSubDataRef, refresh, subscribedTopics } = useRos();
 
@@ -193,12 +194,10 @@ const GlobalPath = () => {
       }
     }
 
-    if (
-      "Odometry" in subscribedTopics.current &&
+    setGotDataOd("Odometry" in subscribedTopics.current &&
       subscribedTopics.current["Odometry"].path in topicSubDataRef.current &&
-      "message" in
-        topicSubDataRef.current[subscribedTopics.current["Odometry"].path]
-    ) {
+      "message" in topicSubDataRef.current[subscribedTopics.current["Odometry"].path]);
+    if (gotDataOd) {
       if (movingSphereRef.current) {
         const position =
           topicSubDataRef.current[subscribedTopics.current["Odometry"].path]
@@ -234,9 +233,9 @@ const GlobalPath = () => {
     };
   }, []);
 
-  if (gotDataGP) {
+  if (gotDataGP && gotDataOd) {
     return (
-      <div className="card" id="Global Path">
+      <div className="card" id="Global-Path-card">
         <h3 className="card-title"> Global Path </h3>
         <div
           ref={mountRef}
@@ -249,10 +248,25 @@ const GlobalPath = () => {
         />
       </div>
     );
-  } else {
+  } else if (!gotDataGP) {
     return (
-      <div className="card" id="IMU-card">
-        <h3 className="card-title-warn"> Global Path | No Global Path </h3>
+      <div className="card" id="Global-Path-card">
+        <h3 className="card-title-error"> Global Path | No Global Path </h3>
+        <div
+          ref={mountRef}
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        />
+      </div>
+    );
+  } {
+    return (
+      <div className="card" id="Global-Path-card">
+        <h3 className="card-title-warn"> Global Path | No Odometry </h3>
         <div
           ref={mountRef}
           style={{

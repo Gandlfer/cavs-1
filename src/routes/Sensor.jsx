@@ -24,7 +24,7 @@ export default function Sensor() {
       {isCon ? (
         <PointCloud />
       ) : (
-        <div className="card">
+        <div className="card" id="PointCloud-card">
           <h3 className="card-title"> Lidar </h3>
           <div>
             No websocket connection.
@@ -35,7 +35,7 @@ export default function Sensor() {
       {isCon ? (
         <Camera />
       ) : (
-        <div className="card">
+        <div className="card" id="Camera-card">
           <h3 className="card-title"> Camera </h3>
           <div>
             No websocket connection.
@@ -46,7 +46,7 @@ export default function Sensor() {
       {isCon ? (
         <Compass />
       ) : (
-        <div className="card" id="compass-card">
+        <div className="card" id="Compass-card">
           <h3 className="card-title"> Compass </h3>
           <div>
             No websocket connection.
