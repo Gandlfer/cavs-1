@@ -202,7 +202,7 @@ const PointCloud = () => {
   else{
     return (
       <div className="card" id="PointCloud-card">
-        <h3 className="card-title-error"> Lidar {gotDataOd? "" : "| No Odometry"} {gotDataPC? "" : "| No Pointcloud"}</h3>
+        <h3 className="card-title-error" title={`IMU ${gotDataOd ? "" : "| No Odometry reading!"} ${gotDataPC ? "" : "| No Point Cloud reading!"}`}> Lidar {gotDataOd? "" : "| No Odometry"} {gotDataPC? "" : "| No Pointcloud"}</h3>
         <div
           ref={mountRef}
           style={{

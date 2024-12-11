@@ -253,7 +253,7 @@ const Waypoints = () => {
   } else if(!gotDataWP) {
     return (
       <div className="card" id="Waypoint-card">
-        <h3 className="card-title-error"> Waypoints | No Waypoints </h3>
+        <h3 className="card-title-error" title="No Waypoint reading!"> Waypoints | No Waypoints </h3>
         <div
           ref={mountRef}
           style={{
@@ -268,7 +268,7 @@ const Waypoints = () => {
   } else {
     return (
       <div className="card" id="Waypoint-card">
-        <h3 className="card-title-warn"> Waypoints | No Odometry </h3>
+        <h3 className="card-title-warn" title="No Odometry reading! Vehicle location is likely incorrect!"> Waypoints | No Odometry </h3>
         <div
           ref={mountRef}
           style={{

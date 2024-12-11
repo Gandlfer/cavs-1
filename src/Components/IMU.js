@@ -33,7 +33,7 @@ const IMU = () => {
   } else {
     return (
       <div className="card-IMU" id="IMU-card">
-        <h3 className="card-title-error"> IMU {gotDataOd? "" : "| No Odometry"} {gotDataIMU? "" : "| No IMU"}</h3>
+        <h3 className="card-title-error" title={`${gotDataOd ? "" : "No Odometry! "} ${gotDataIMU ? "" : "| No IMU reading!"}`}> IMU {gotDataOd? "" : "| No Odometry reading!"} {gotDataIMU? "" : "| No IMU"}</h3>
         <IMU_Ang/> <IMU_Pos/>
       </div>
     );

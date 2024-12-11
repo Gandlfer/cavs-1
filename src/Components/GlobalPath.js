@@ -251,7 +251,7 @@ const GlobalPath = () => {
   } else if (!gotDataGP) {
     return (
       <div className="card" id="Global-Path-card">
-        <h3 className="card-title-error"> Global Path | No Global Path </h3>
+        <h3 className="card-title-error" title="No reading from Global Path!"> Global Path | No Global Path </h3>
         <div
           ref={mountRef}
           style={{
@@ -266,7 +266,7 @@ const GlobalPath = () => {
   } {
     return (
       <div className="card" id="Global-Path-card">
-        <h3 className="card-title-warn"> Global Path | No Odometry </h3>
+        <h3 className="card-title-warn"title="No reading from Odometry. Vehicle location is likely incorrect!"> Global Path | No Odometry </h3>
         <div
           ref={mountRef}
           style={{

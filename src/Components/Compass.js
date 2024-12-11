@@ -38,7 +38,7 @@ const Compass = () => {
   else {
     return (
       <div className="card" id="Compass-card">
-        <h3 className="card-title-error"> Compass | No Odometry </h3>
+        <h3 className="card-title-error" title="No reading from Odometry!"> Compass | No Odometry </h3>
         <div style={{ width: "100%", height: "100%" }}>
           <p>No data from {subscribedTopics.current["Odometry"].path}</p>
         </div>
