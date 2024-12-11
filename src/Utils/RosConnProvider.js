@@ -27,7 +27,7 @@ export const RosProvider = ({ children }) => {
   const [load, setLoad] = useState(true);
   let rosConn;
 
-  // Input a list of "Label" : "Path"
+  //Input a list of "Label" : "Path"
   const subscribeToTopics = (topicList) => {
     Object.keys(topicList).forEach((topicLabel) => {
       const topicName = topicList[topicLabel];
@@ -52,30 +52,33 @@ export const RosProvider = ({ children }) => {
         path: topicName,
         topicSub: newTopic,
       };
-      // Mark as inactive initially
+      //Mark as inactive initially
       inactiveTopicsRef.current.add(topicName);
 
       topicSubDataRef.current[topicName] = {};
 
       newTopic.subscribe((message) => {
-        if (!("prevTime" in topicSubDataRef.current[topicName])) {
-          //topicSubDataRef.current[topicName] = {};
-          topicSubDataRef.current[topicName].prevTime = Date.now();
+        //First run / new topic; Refresh rate is based off of 10 messages
+        if (!("lastTwenty" in topicSubDataRef.current[topicName])) {
           topicSubDataRef.current[topicName].pubRate = 0;
-          //topicSubDataRef.current[topicName].pubRate = 0;
+          topicSubDataRef.current[topicName].lastTwenty = Array(10).fill(0);
         } else {
-          let rate =
-            1 /
-            ((Date.now() - topicSubDataRef.current[topicName].prevTime) / 1000);
+          //Not first run, should have data
+          topicSubDataRef.current[topicName].lastTwenty.pop();
+          topicSubDataRef.current[topicName].lastTwenty.unshift(Date.now());
 
+          //Calculate the time between the messages
+          let rate = 10 / ((topicSubDataRef.current[topicName].lastTwenty[0] -
+             topicSubDataRef.current[topicName].lastTwenty[9]) / 1000);
+
+          //Data bursts risk multiple messages arriving at same timestamp
           if (isFinite(rate)) {
             topicSubDataRef.current[topicName].pubRate = Math.ceil(rate);
           } else {
             topicSubDataRef.current[topicName].pubRate = 0;
           }
-
-          topicSubDataRef.current[topicName].prevTime = Date.now();
         }
+        //Load content
         topicSubDataRef.current[topicName].message = message;
         temp = !temp;
         setRefresh(temp);
@@ -84,7 +87,7 @@ export const RosProvider = ({ children }) => {
   };
 
   const resubscribeToTopics = (newTopics) => {
-    // Unsubscribe from all current topics
+    //Unsubscribe from all current topics
     Object.keys(subscribedTopics.current).forEach((topicLabel) => {
       if (subscribedTopics.current[topicLabel]) {
         subscribedTopics.current[topicLabel].topicSub.unsubscribe();
@@ -92,7 +95,7 @@ export const RosProvider = ({ children }) => {
     });
     subscribedTopics.current = {};
     topicSubDataRef.current = {};
-    // Subscribe to only the selected topics
+    //Subscribe to only the selected topics
     subscribeToTopics(newTopics);
   };
 
@@ -102,6 +105,7 @@ export const RosProvider = ({ children }) => {
     });
   };
 
+  //Reconnect to ros using given URL. Should not contain ws:// part of link
   const reconnectRos = (newUrl) => {
     if (ros) {
       ros.close();
@@ -116,16 +120,15 @@ export const RosProvider = ({ children }) => {
     setLoading(false);
   };
 
-  // Check for topics with no data periodically
+  //Check for topics with no data periodically
   if (isCon) {
     setInterval(() => {
       const now = Date.now();
       Object.keys(topicSubDataRef.current).forEach((topicName) => {
-        if (!("prevTime" in topicSubDataRef.current[topicName])) {
-          //topicSubDataRef.current[topicName].prevTime = Date.now();
+        if (!("lastTwenty" in topicSubDataRef.current[topicName])) {
           topicSubDataRef.current[topicName].pubRate = 0;
         } else {
-          const lastUpdated = topicSubDataRef.current[topicName].prevTime;
+          const lastUpdated = topicSubDataRef.current[topicName].lastTwenty[0];
 
           if (now - lastUpdated > 60000) {
             // Mark as inactive if no update in the last 5 seconds
@@ -136,6 +139,7 @@ export const RosProvider = ({ children }) => {
     }, 60000);
   }
 
+  //Makes ros connection
   useEffect(() => {
     function connection() {
       setLoading(true);
@@ -148,9 +152,11 @@ export const RosProvider = ({ children }) => {
     connection();
   }, []);
 
+  //Data parsing to determine the path for Components
   useEffect(() => {
     if (ros) {
       subscribeToTopics(
+        //If there is data in cookie use that, otherwise use defaults from "../PlaceholderFiles/ConfigData.jsx"
         localStorage.getItem("ConfigData")
           ? JSON.parse(localStorage.getItem("ConfigData")).reduce(
               (acc, obj) => {
@@ -165,14 +171,17 @@ export const RosProvider = ({ children }) => {
             }, {})
       );
     }
+
+    //Deconstruct: Close ros connection
     return () => {
       if (ros != null) {
-        //topicSubDataRef.current.keys().map((topicName, i) => {});
         topicSubDataRef.current = {};
         ros.close();
       }
     };
   }, [ros]);
+
+  //Updates for isCon
   if (ros != null) {
     ros.on("error", function (error) {
       setIsCon(false);
