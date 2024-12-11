@@ -12,11 +12,6 @@ const ConfigData = [
     cName: "topic",
   },
   {
-    name: "Local Path",
-    path: "/nature/local_path",
-    cName: "topic",
-  },
-  {
     name: "Occupancy Grid",
     path: "/occupancy_grid_image",
     cName: "topic",
