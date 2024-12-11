@@ -11,13 +11,13 @@ const Camera = () => {
 
   useEffect(() => {
     if (
-      "Camera 1" in subscribedTopics.current &&
-      subscribedTopics.current["Camera 1"].path in topicSubDataRef.current &&
-      "message" in topicSubDataRef.current[subscribedTopics.current["Camera 1"].path] &&
+      "Camera" in subscribedTopics.current &&
+      subscribedTopics.current["Camera"].path in topicSubDataRef.current &&
+      "message" in topicSubDataRef.current[subscribedTopics.current["Camera"].path] &&
       isCon
     ) {
       setMessageTest(
-        topicSubDataRef.current[subscribedTopics.current["Camera 1"].path]
+        topicSubDataRef.current[subscribedTopics.current["Camera"].path]
           .message
       );
       if (Object.keys(messageTest).length > 0) {
@@ -33,7 +33,7 @@ const Camera = () => {
     return (
       <div className="card" id="Camera-card">
         <h3 className="card-title">
-          Camera from {subscribedTopics.current["Camera 1"].path}{" "}
+          Camera from {subscribedTopics.current["Camera"].path}{" "}
         </h3>
         <canvas className="card-img" ref={canvasRef} />
       </div>
@@ -42,7 +42,7 @@ const Camera = () => {
     return (
       <div className="card" id="Camera-card">
         <h3 className="card-title-error">
-          Camera from {subscribedTopics.current["Camera 1"].path}{" "}
+          Camera from {subscribedTopics.current["Camera"].path}{" "}
         </h3>
         <canvas className="card-img" ref={canvasRef} />
       </div>

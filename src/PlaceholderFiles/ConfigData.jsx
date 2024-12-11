@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const ConfigData = [
   {
-    name: "Camera 1",
+    name: "Camera",
     path: "/mavs_ros/image",
     cName: "topic",
   },
