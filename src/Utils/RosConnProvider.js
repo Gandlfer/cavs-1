@@ -1,7 +1,6 @@
 import { useState, createContext, useContext, useEffect, useRef } from "react";
 import ROSLIB from "roslib";
-import DefaultServerUrl from "../PlaceholderFiles/ConfigData.jsx";
-import ConfigData from "../PlaceholderFiles/ConfigData.jsx";
+import ConfigData from "../DefaultValues/ConfigData.jsx";
 const RosContext = createContext();
 
 export const useRos = () => {
@@ -19,7 +18,7 @@ export const RosProvider = ({ children }) => {
   const defaultURLRef = useRef(
     localStorage.getItem("ServerURL")
       ? JSON.parse(localStorage.getItem("ServerURL"))
-      : "localhost:9090"
+      : ConfigData.serverURL
   );
   const [refresh, setRefresh] = useState(false);
   const [availableTopicsRefresh, setAvailableTopicsRefresh] = useState([]);
@@ -165,7 +164,7 @@ export const RosProvider = ({ children }) => {
               },
               {}
             )
-          : ConfigData.reduce((acc, obj) => {
+          : ConfigData.topics.reduce((acc, obj) => {
               acc[obj.name] = obj.path;
               return acc;
             }, {})

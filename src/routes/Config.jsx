@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ConfigData from "../PlaceholderFiles/ConfigData";
+import ConfigData from "../DefaultValues/ConfigData";
 import ConfigTopicAvailable from "../Components/ConfigTopicAvailable";
 import { useRos } from "../Utils/RosConnProvider";
 import * as Io5 from "react-icons/io5";
@@ -12,7 +12,7 @@ export default function Config() {
   const [config, setConfig] = useState(
     localStorage.getItem("ConfigData")
       ? JSON.parse(localStorage.getItem("ConfigData"))
-      : ConfigData
+      : ConfigData.topics
   );
   const notify = () => {toast.success("Path Saved")};
 
