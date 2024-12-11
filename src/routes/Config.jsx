@@ -42,9 +42,13 @@ export default function Config() {
 
   const handleSaveServer = () => {
     const newUrl = document.getElementById("server-path").value;
+
     if (newUrl.replace("ws://", "") != defaultURLRef.current) {
+      localStorage.setItem("ServerURL", JSON.stringify(newUrl.replace("ws://", "")));
+      
       //Reconnect to ROS using the new WebSocket URL
       reconnectRos(newUrl.replace("ws://", "")); 
+
         notify();
     }
   };

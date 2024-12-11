@@ -18,7 +18,7 @@ export const RosProvider = ({ children }) => {
   const inactiveTopicsRef = useRef(new Set());
   const defaultURLRef = useRef(
     localStorage.getItem("ServerURL")
-      ? JSON.stringify(localStorage.getItem("ServerURL"))
+      ? JSON.parse(localStorage.getItem("ServerURL"))
       : "localhost:9090"
   );
   const [refresh, setRefresh] = useState(false);
