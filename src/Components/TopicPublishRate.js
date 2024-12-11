@@ -1,4 +1,3 @@
-import ROSLIB from "roslib";
 import { useState, useEffect, useRef } from "react";
 import { useRos } from "../Utils/RosConnProvider.js";
 
@@ -14,7 +13,9 @@ const TopicPublishRate = () => {
         // Trigger updates periodically
         setUpdateTrigger((prev) => prev + 1);
       }, 1000); // Update every second (adjust interval as needed)
-      return () => clearInterval(intervalId); // Cleanup on component unmount
+      
+      //Disposal on unmmount
+      return () => clearInterval(intervalId);
     }
   }, [ros, isCon]);
 
@@ -71,20 +72,8 @@ const TopicPublishRate = () => {
                 <div
                   className="topic-color"
                   id={topicData && topicData.pubRate > 0 ? "green" : "red"}
-                  // {
-                  //   "pubRate" in topicSubDataRef.current[topic]
-                  //     ? topicSubDataRef.current[topic].pubRate > 0
-                  //       ? "green"
-                  //       : "red"
-                  //     : "red"
-                  // }
                 >
                   {topicData ? topicData.pubRate || 0 : 0}
-                  {/* {"pubRate" in topicSubDataRef.current[topic]
-                    ? topicSubDataRef.current[topic].pubRate
-                      ? topicSubDataRef.current[topic].pubRate
-                      : 0
-                    : 0} */}
                 </div>
               </li>
             );
