@@ -67,8 +67,11 @@ export const RosProvider = ({ children }) => {
           topicSubDataRef.current[topicName].lastTwenty.unshift(Date.now());
 
           //Calculate the time between the messages
-          let rate = 10 / ((topicSubDataRef.current[topicName].lastTwenty[0] -
-             topicSubDataRef.current[topicName].lastTwenty[9]) / 1000);
+          let rate =
+            10 /
+            ((topicSubDataRef.current[topicName].lastTwenty[0] -
+              topicSubDataRef.current[topicName].lastTwenty[9]) /
+              1000);
 
           //Data bursts risk multiple messages arriving at same timestamp
           if (isFinite(rate)) {
@@ -129,13 +132,13 @@ export const RosProvider = ({ children }) => {
         } else {
           const lastUpdated = topicSubDataRef.current[topicName].lastTwenty[0];
 
-          if (now - lastUpdated > 60000) {
+          if (now - lastUpdated > 5000) {
             // Mark as inactive if no update in the last 5 seconds
             topicSubDataRef.current[topicName].pubRate = 0;
           }
         }
       });
-    }, 60000);
+    }, 5000);
   }
 
   //Makes ros connection
